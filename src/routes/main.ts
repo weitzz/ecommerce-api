@@ -6,3 +6,4 @@ export const routes = Router();
 routes.get('/banners', bannerController.getBanners);
 routes.get('/products', productsController.getProducts);
 routes.get('/product/:id', productsController.getProductById);
+routes.get('/product/:id/related', productsController.getRelatedProducts);
