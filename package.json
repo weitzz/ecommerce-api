@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "test": "jest --passWithNoTests"
+    "dev": "tsx watch --env-file=.env src/server.ts",
+    "test": "jest --passWithNoTests",
+    "db:seed": "prisma db seed"
   },
   "keywords": [],
   "author": "Tatiane Weitzel",
   "license": "ISC",
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^6.15.0",
     "bcryptjs": "^3.0.2",
