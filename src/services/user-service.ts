@@ -1,4 +1,5 @@
 import { prisma } from "@/libs/prisma"
+import { Address } from "@/types/address"
 import { compare, hash } from "bcryptjs"
 import { v4 } from "uuid"
 export const createUserService = async (name: string, email: string, password: string) => {
@@ -31,4 +32,38 @@ export const loginUserService = async (email: string, password: string) => {
     })
 
     return token
+}
+
+export const GetUserByIdTokenService = async (token: string) => {
+    const user = await prisma.user.findFirst({ where: { token } })
+    if (!user) return null
+    return user.id
+}
+
+export const createAddressService = async (userId: number, address: Address) => {
+    return await prisma.userAddress.create({
+        data: {
+            ...address,
+            userId
+        }
+    })
+
+}
+
+export const getAddressService = async (userId: number) => {
+    return await prisma.userAddress.findMany({
+        where: { userId },
+        select: {
+            id: true,
+            zipcode: true,
+            street: true,
+            number: true,
+            city: true,
+            state: true,
+            country: true,
+            complement: true
+
+        }
+    })
+
 }
