@@ -6,6 +6,6 @@ export type Address = {
     city: string
     state: string
     country: string
-    complement?: string
+    complement?: string | null
 
 }

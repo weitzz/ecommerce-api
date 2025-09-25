@@ -3,6 +3,9 @@ import { RequestHandler } from "express";
 import { getProductByIdService } from "../services/products-service";
 import { getAbsoluteImageUrl } from "@/utils/get-absolute-image-url";
 import { calculateShippingSchema } from "@/schemas/calculate-shipping-schema";
+import { cartFinishSchema } from "@/schemas/cart-finish-schema";
+import { getAddressByIdService } from "@/services/user-service";
+import { createOrder } from "@/services/order-service";
 
 export const cartMont: RequestHandler = async (req, res) => {
     const parseResult = cartMountSchema.safeParse(req.body);
@@ -37,4 +40,33 @@ export const calculateShipping: RequestHandler = async (req, res) => {
     const { zipcode } = parseResult.data
 
     res.json({ error: null, zipcode, cost: 7, days: 3 });
+}
+
+
+export const finish: RequestHandler = async (req, res) => {
+    const userId = (req as any).userId
+
+    if (!userId) {
+        return res.status(401).json({ error: "Access denied" });
+
+    }
+
+    const result = cartFinishSchema.safeParse(req.query)
+    if (!result.success) {
+        return res.status(400).json({ error: "Invalid cart" });
+    }
+    const { cart, addressId } = result.data
+    const address = await getAddressByIdService(userId, addressId)
+
+    if (!address) {
+        return res.status(400).json({ error: "Invalid address" });
+    }
+
+    const shippingCost = 7
+    const shippingDays = 3
+
+    const orderId = await createOrder({ userId, cart, address, shippingCost, shippingDays })
+    let url = ""
+
+    res.json({ error: null, url }).status(201);
 }

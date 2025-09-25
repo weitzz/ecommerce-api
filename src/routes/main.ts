@@ -17,8 +17,11 @@ routes.get('/products', productsController.getProducts);
 routes.get('/product/:id', productsController.getProductById);
 routes.get('/product/:id/related', productsController.getRelatedProducts);
 routes.get('category/:slug/metadata', categoryController.getCategoryWithMetadata);
+
 routes.post('/cart/mount', cartController.cartMont);
 routes.get('/cart/shipping', cartController.calculateShipping);
+routes.get('/cart/finish', authMiddleware, cartController.finish);
+
 routes.post('/user/register', userController.registerUser);
 routes.post('/user/login', userController.loginUser);
 routes.post('/user/addresses', authMiddleware, userController.addAddress);
