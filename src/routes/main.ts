@@ -4,6 +4,7 @@ import * as productsController from "@/controllers/products-controller.js";
 import * as categoryController from "@/controllers/category-controller.js";
 import * as cartController from "@/controllers/cart-controller.js";
 import * as userController from "@/controllers/user-controller.js"
+import * as webhookController from "@/controllers/webhook-controller.js"
 import { authMiddleware } from "@/middleware/auth";
 export const routes = Router();
 
@@ -26,3 +27,5 @@ routes.post('/user/register', userController.registerUser);
 routes.post('/user/login', userController.loginUser);
 routes.post('/user/addresses', authMiddleware, userController.addAddress);
 routes.get('/user/addresses', authMiddleware, userController.getAddresses);
+
+routes.post('/webhook/stripe', webhookController.stripe);

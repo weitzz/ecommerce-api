@@ -51,3 +51,11 @@ export const createOrder = async ({ userId, address, shippingCost, shippingDays,
 
     return order.id
 }
+
+
+export const updateOrderStatus = async (orderId: number, status: "paid" | 'canceled') => {
+    await prisma.order.update({
+        where: { id: orderId },
+        data: { status }
+    })
+}

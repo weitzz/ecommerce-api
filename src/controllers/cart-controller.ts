@@ -6,6 +6,7 @@ import { calculateShippingSchema } from "@/schemas/calculate-shipping-schema";
 import { cartFinishSchema } from "@/schemas/cart-finish-schema";
 import { getAddressByIdService } from "@/services/user-service";
 import { createOrder } from "@/services/order-service";
+import { createPaymentLink } from "@/services/payment-service";
 
 export const cartMont: RequestHandler = async (req, res) => {
     const parseResult = cartMountSchema.safeParse(req.body);
@@ -66,7 +67,17 @@ export const finish: RequestHandler = async (req, res) => {
     const shippingDays = 3
 
     const orderId = await createOrder({ userId, cart, address, shippingCost, shippingDays })
-    let url = ""
+
+
+    if (!orderId) {
+        return res.status(400).json({ error: "Failed to create order" });
+    }
+
+    const url = await createPaymentLink({ cart, shippingCost, orderId })
+
+    if (!url) {
+        return res.status(400).json({ error: "Failed to create payment link" });
+    }
 
     res.json({ error: null, url }).status(201);
 }
