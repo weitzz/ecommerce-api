@@ -1,5 +1,5 @@
 import { getConstructEvent } from "@/libs/stripe";
-import { updateOrderStatus } from "@/services/order-service";
+import { updateOrderStatusService } from "@/services/order-service";
 import { getStripeWebhookSecret } from "@/utils/get-stripe-webhook-secret";
 import { RequestHandler } from "express";
 
@@ -18,11 +18,11 @@ export const stripe: RequestHandler = async (req, res) => {
             case 'checkout.session.completed':
             case 'checkout.session.async_payment_succeeded':
 
-                await updateOrderStatus(orderId, 'paid')
+                await updateOrderStatusService(orderId, 'paid')
                 break;
             case 'checkout.session.expired':
             case 'checkout.session.async_payment_failed':
-                await updateOrderStatus(orderId, 'canceled')
+                await updateOrderStatusService(orderId, 'canceled')
                 break;
 
         }

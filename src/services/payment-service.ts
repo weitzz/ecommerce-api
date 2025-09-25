@@ -4,7 +4,7 @@ import { CreatePaymentParams } from "@/types/payments";
 
 
 
-export const createPaymentLink = async ({ cart, shippingCost, orderId }: CreatePaymentParams) => {
+export const createPaymentLinkService = async ({ cart, shippingCost, orderId }: CreatePaymentParams) => {
     try {
         const session = await createStripeCheckoutSession({ cart, shippingCost, orderId });
         if (!session) return null;
@@ -15,7 +15,7 @@ export const createPaymentLink = async ({ cart, shippingCost, orderId }: CreateP
 
 }
 
-export const getOrderIdFromSession = async (sessionId: string) => {
+export const getOrderIdFromSessionService = async (sessionId: string) => {
     try {
         const session = await getStripeCheckoutSession(sessionId);
         const orderId = session.metadata?.orderId;

@@ -5,8 +5,8 @@ import { getAbsoluteImageUrl } from "@/utils/get-absolute-image-url";
 import { calculateShippingSchema } from "@/schemas/calculate-shipping-schema";
 import { cartFinishSchema } from "@/schemas/cart-finish-schema";
 import { getAddressByIdService } from "@/services/user-service";
-import { createOrder } from "@/services/order-service";
-import { createPaymentLink } from "@/services/payment-service";
+import { createOrderService } from "@/services/order-service";
+import { createPaymentLinkService } from "@/services/payment-service";
 
 export const cartMont: RequestHandler = async (req, res) => {
     const parseResult = cartMountSchema.safeParse(req.body);
@@ -66,14 +66,14 @@ export const finish: RequestHandler = async (req, res) => {
     const shippingCost = 7
     const shippingDays = 3
 
-    const orderId = await createOrder({ userId, cart, address, shippingCost, shippingDays })
+    const orderId = await createOrderService({ userId, cart, address, shippingCost, shippingDays })
 
 
     if (!orderId) {
         return res.status(400).json({ error: "Failed to create order" });
     }
 
-    const url = await createPaymentLink({ cart, shippingCost, orderId })
+    const url = await createPaymentLinkService({ cart, shippingCost, orderId })
 
     if (!url) {
         return res.status(400).json({ error: "Failed to create payment link" });

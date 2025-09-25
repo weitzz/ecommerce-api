@@ -86,7 +86,7 @@ export const getProductByIdService = async (id: number) => {
 }
 
 
-export const incrementProductViews = async (id: number) => {
+export const incrementProductViewsService = async (id: number) => {
     await prisma.product.update({
         where: { id },
         data: {
@@ -97,7 +97,7 @@ export const incrementProductViews = async (id: number) => {
     })
 }
 
-export const getProductsFromSameCategory = async (id: number, limit: number = 4) => {
+export const getProductsFromSameCategoryService = async (id: number, limit: number = 4) => {
     const product = await prisma.product.findUnique({
         where: { id },
         select: { categoryId: true }

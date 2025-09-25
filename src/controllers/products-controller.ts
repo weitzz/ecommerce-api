@@ -1,7 +1,7 @@
 
 import { getProductByIdSchema } from '@/schemas/get-product-by-id-schema';
 import { getProductSchema } from '@/schemas/get-product-schema';
-import { getAllProductsService, getProductByIdService, getProductsFromSameCategory, incrementProductViews } from '@/services/products-service';
+import { getAllProductsService, getProductByIdService, getProductsFromSameCategoryService, incrementProductViewsService } from '@/services/products-service';
 import { getAbsoluteImageUrl } from '@/utils/get-absolute-image-url';
 import { RequestHandler } from 'express';
 import { getCategoryService } from '@/services/category-service';
@@ -51,7 +51,7 @@ export const getProductById: RequestHandler = async (req, res) => {
 
     }
     const category = await getCategoryService(product.categoryId);
-    await incrementProductViews(product.id);
+    await incrementProductViewsService(product.id);
 
 
     res.json({ error: null, product: productWithAbsoluteImages, category });
@@ -69,7 +69,7 @@ export const getRelatedProducts: RequestHandler = async (req, res) => {
 
     const { id } = productId.data;
     const { limit } = queryResult.data;
-    const products = await getProductsFromSameCategory(parseInt(id), limit ? parseInt(limit) : undefined);
+    const products = await getProductsFromSameCategoryService(parseInt(id), limit ? parseInt(limit) : undefined);
 
     const productsWithAbsoluteUrl = products.map(product => ({
         ...product,

@@ -11,7 +11,7 @@ type CreateOrderParams = {
 };
 
 
-export const createOrder = async ({ userId, address, shippingCost, shippingDays, cart }: CreateOrderParams) => {
+export const createOrderService = async ({ userId, address, shippingCost, shippingDays, cart }: CreateOrderParams) => {
     let subtotal = 0
     let orderItems = []
 
@@ -53,9 +53,74 @@ export const createOrder = async ({ userId, address, shippingCost, shippingDays,
 }
 
 
-export const updateOrderStatus = async (orderId: number, status: "paid" | 'canceled') => {
+export const updateOrderStatusService = async (orderId: number, status: "paid" | 'canceled') => {
     await prisma.order.update({
         where: { id: orderId },
         data: { status }
     })
+}
+
+export const getUserOrdersService = async (userId: number) => {
+    return await prisma.order.findMany({
+        where: { id: userId },
+        select: {
+            id: true,
+            totalPrice: true,
+            status: true,
+            createdAt: true
+        },
+        orderBy: { createdAt: 'desc' }
+    })
+}
+
+export const getOrderByIdService = async (id: number, userId: number) => {
+    const order = await prisma.order.findFirst({
+        where: { id, userId },
+        select: {
+            id: true,
+            status: true,
+            totalPrice: true,
+            shippingCost: true,
+            shippingDays: true,
+            shippingCity: true,
+            shippingComplement: true,
+            shippingCountry: true,
+            shippingNumber: true,
+            shippingState: true,
+            shippingStreet: true,
+            shippingZipcode: true,
+            createdAt: true,
+            orderProducts: {
+                select: {
+                    id: true,
+                    quantity: true,
+                    price: true,
+                    product: {
+                        select: {
+                            id: true,
+                            name: true,
+                            price: true,
+                            images: {
+                                take: 1,
+                                orderBy: { id: 'asc' }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+    if (!order) return null;
+
+    return {
+        ...order,
+        orderItems: order.orderProducts.map(item => ({
+            ...item,
+            product: {
+                ...item.product,
+                image: item.product.images[0] ? `media/products/${item.product.images[0].imageUrl}` : null,
+                images: undefined
+            }
+        }))
+    }
 }

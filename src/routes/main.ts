@@ -31,3 +31,5 @@ routes.get('/user/addresses', authMiddleware, userController.getAddresses);
 
 routes.post('/webhook/stripe', webhookController.stripe);
 routes.get('/orders/session', orderController.getOrderBySessionId)
+routes.get('/orders', authMiddleware, orderController.getOrders)
+routes.get('/orders/:id', authMiddleware, orderController.getOrderById)

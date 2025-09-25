@@ -1,6 +1,9 @@
 import { getOrderBySessionIdSchema } from "@/schemas/get-by-session-order-id-schema";
-import { getOrderIdFromSession } from "@/services/payment-service";
+import { getOrderByIdSchema } from "@/schemas/get-order-schema";
+import { getOrderByIdService, getUserOrdersService } from "@/services/order-service";
+import { getOrderIdFromSessionService } from "@/services/payment-service";
 import { RequestHandler } from "express";
+import { parse } from "path";
 
 export const getOrderBySessionId: RequestHandler = async (req, res) => {
     const result = getOrderBySessionIdSchema.safeParse(req.query);
@@ -10,10 +13,56 @@ export const getOrderBySessionId: RequestHandler = async (req, res) => {
 
     const { session_id } = result.data;
 
-    const orderId = await getOrderIdFromSession(session_id);
+    const orderId = await getOrderIdFromSessionService(session_id);
     if (!orderId) {
         return res.status(404).json({ error: "Order not found" });
     }
 
     res.json({ error: null, orderId })
+}
+
+
+export const getOrders: RequestHandler = async (req, res) => {
+    const userId = (req as any).userId;
+    if (!userId) {
+        return res.status(401).json({ error: "Access denied" });
+
+    }
+
+    const orders = await getUserOrdersService(userId)
+
+
+    res.json({ error: null, orders })
+}
+
+
+export const getOrderById: RequestHandler = async (req, res) => {
+    const userId = (req as any).userId;
+    if (!userId) {
+        return res.status(401).json({ error: "Access denied" });
+    }
+    const result = getOrderByIdSchema.safeParse(req.params);
+    if (!result.success) {
+        return res.status(400).json({ error: "ID invalid" });
+    }
+
+    const { id } = result.data;
+
+    const order = await getOrderByIdService(parseInt(id), userId);
+    if (!order) {
+        return res.status(404).json({ error: "Order not found" });
+    }
+
+    const itemsWithAbsoluteUrl = order.orderProducts.map(item => ({
+        ...item,
+        product: {
+            ...item.product,
+            image: item.product.images[0] ? `media/products/${item.product.images[0].imageUrl}` : null
+        }
+    }))
+
+    res.json({
+        error: null,
+        order: { ...order, orderItems: itemsWithAbsoluteUrl }
+    })
 }
