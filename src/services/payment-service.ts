@@ -1,4 +1,4 @@
-import { createStripeCheckoutSession, getStripeCheckoutSession } from "@/libs/stripe";
+import { createStripeCheckoutSession, getStripeCheckoutSession } from "../libs/stripe";
 import { CreatePaymentParams } from "@/types/payments";
 
 

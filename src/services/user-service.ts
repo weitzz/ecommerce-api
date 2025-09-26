@@ -1,4 +1,4 @@
-import { prisma } from "@/libs/prisma"
+import { prisma } from "../libs/prisma"
 import { Address } from "@/types/address"
 import { compare, hash } from "bcryptjs"
 import { v4 } from "uuid"

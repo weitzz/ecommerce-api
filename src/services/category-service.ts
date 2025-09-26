@@ -1,4 +1,4 @@
-import { prisma } from "@/libs/prisma"
+import { prisma } from "../libs/prisma"
 
 export const getCategoryService = async (id: number) => {
     const category = await prisma.category.findUnique({

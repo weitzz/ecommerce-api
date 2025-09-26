@@ -1,6 +1,6 @@
 import { CartItem } from "@/types/cart-item";
 import { Address } from "@/types/address";
-import { prisma } from "@/libs/prisma";
+import { prisma } from "../libs/prisma";
 import { getProductByIdService } from "./products-service";
 type CreateOrderParams = {
     userId: number;
@@ -19,12 +19,12 @@ export const createOrderService = async ({ userId, address, shippingCost, shippi
         const product = await getProductByIdService(cartItem.productId)
         if (product) {
             subtotal += product.price * cartItem.quantity
+            orderItems.push({
+                productId: product.id,
+                quantity: cartItem.quantity,
+                price: product.price
+            })
         }
-        orderItems.push({
-            productId: product.id,
-            quantity: cartItem.quantity,
-            price: product.price
-        })
 
     }
 
