@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch --env-file=.env src/server.ts",
-    "test": "jest --passWithNoTests",
+    "test": "jest --runInBand --detectOpenHandles",
+    "pretest:int": "docker run --name db_testing -e POSTGRES_PASSWORD=postgres -p 5433:5432 -d postgres",
+    "test:int": "npx dotenv-cli -e .env.test -- jest --runInBand --config ./jest.int.config.ts",
+    "posttest:int": "docker stop db_testing && docker rm db_testing",
     "db:seed": "prisma db seed",
     "db:reset": "prisma db migrate reset"
   },

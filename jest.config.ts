@@ -5,6 +5,7 @@ const config: Config = {
     testEnvironment: 'node',
     roots: ['<rootDir>/src'],
     moduleFileExtensions: ['ts', 'js', 'json'],
+    detectOpenHandles: true,
     transform: {
         '^.+\\.(ts|tsx)$': 'ts-jest',
     },
