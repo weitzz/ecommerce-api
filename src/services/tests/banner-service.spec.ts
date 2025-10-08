@@ -1,9 +1,9 @@
 
-import { prisma } from "../../libs/prisma";
-import { getAllBannersService } from "../banner-service";
+import { prisma } from "@/libs/prisma";
+import { getAllBannersService } from "@/services/banner-service";
 
 
-jest.mock("../../libs/prisma", () => ({
+jest.mock("@/libs/prisma", () => ({
     prisma: {
         banner: {
             findMany: jest.fn()

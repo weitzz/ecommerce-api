@@ -1,11 +1,11 @@
 import { Router } from "express";
-import * as bannerController from "@/controllers/banner-controller.js";
-import * as productsController from "@/controllers/products-controller.js";
-import * as categoryController from "@/controllers/category-controller.js";
-import * as cartController from "@/controllers/cart-controller.js";
-import * as userController from "@/controllers/user-controller.js"
-import * as webhookController from "@/controllers/webhook-controller.js"
-import * as orderController from "@/controllers/order-controller.js"
+import * as bannerController from "@/controllers/banner-controller";
+import * as productsController from "@/controllers/products-controller";
+import * as categoryController from "@/controllers/category-controller";
+import * as cartController from "@/controllers/cart-controller";
+import * as userController from "@/controllers/user-controller"
+import * as webhookController from "@/controllers/webhook-controller"
+import * as orderController from "@/controllers/order-controller"
 import { authMiddleware } from "@/middleware/auth";
 export const routes = Router();
 

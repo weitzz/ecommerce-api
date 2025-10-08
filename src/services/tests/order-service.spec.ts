@@ -1,8 +1,8 @@
-import { prisma } from "../../libs/prisma"
-import { createOrderService, updateOrderStatusService, getUserOrdersService, getOrderByIdService } from "../order-service"
-import { getProductByIdService } from "../products-service"
+import { prisma } from "@/libs/prisma"
+import { createOrderService, updateOrderStatusService, getUserOrdersService, getOrderByIdService } from "@/services/order-service"
+import { getProductByIdService } from "@/services/products-service"
 
-jest.mock("../../libs/prisma", () => ({
+jest.mock("@/libs/prisma", () => ({
     prisma: {
         order: {
             create: jest.fn(),
@@ -12,7 +12,7 @@ jest.mock("../../libs/prisma", () => ({
         },
     },
 }));
-jest.mock("../products-service", () => ({
+jest.mock("@/services/products-service", () => ({
     getProductByIdService: jest.fn(),
 }));
 

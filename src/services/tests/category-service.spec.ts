@@ -1,7 +1,7 @@
-import { prisma } from "../../libs/prisma"
-import { getCategoryBySlugService, getCategoryMetadataService, getCategoryService } from "../category-service"
+import { prisma } from "@/libs/prisma"
+import { getCategoryBySlugService, getCategoryMetadataService, getCategoryService } from "@/services/category-service";
 
-jest.mock("../../libs/prisma", () => ({
+jest.mock("@/libs/prisma", () => ({
     prisma: {
         category: {
             findUnique: jest.fn(),

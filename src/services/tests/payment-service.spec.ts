@@ -1,14 +1,14 @@
 import {
     createPaymentLinkService,
     getOrderIdFromSessionService,
-} from "../payment-service";
+} from "@/services/payment-service";
 import {
     createStripeCheckoutSession,
     getStripeCheckoutSession,
-} from "../../libs/stripe";
+} from "@/libs/stripe";
 
 
-jest.mock("../../libs/stripe", () => ({
+jest.mock("@/libs/stripe", () => ({
     createStripeCheckoutSession: jest.fn(),
     getStripeCheckoutSession: jest.fn(),
 }));

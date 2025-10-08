@@ -1,4 +1,4 @@
-import { prisma } from "../../libs/prisma";
+import { prisma } from "@/libs/prisma";
 import {
     createUserService,
     loginUserService,
@@ -6,11 +6,11 @@ import {
     createAddressService,
     getAddressService,
     getAddressByIdService,
-} from "../user-service";
+} from "@/services/user-service";
 import { compare, hash } from "bcryptjs";
 import { v4 } from "uuid";
 
-jest.mock("../../libs/prisma", () => ({
+jest.mock("@/libs/prisma", () => ({
     prisma: {
         user: {
             findUnique: jest.fn(),

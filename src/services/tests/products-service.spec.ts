@@ -1,12 +1,12 @@
-import { prisma } from "../../libs/prisma";
+import { prisma } from "@/libs/prisma";
 import {
     getAllProductsService,
     getProductByIdService,
     incrementProductViewsService,
     getProductsFromSameCategoryService,
-} from "../products-service";
+} from "@/services/products-service";
 
-jest.mock("../../libs/prisma", () => ({
+jest.mock("@/libs/prisma", () => ({
     prisma: {
         product: {
             findMany: jest.fn(),

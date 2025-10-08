@@ -1,6 +1,6 @@
 import { cartMountSchema } from "@/schemas/cart-mount-schema";
 import { RequestHandler } from "express";
-import { getProductByIdService } from "../services/products-service";
+import { getProductByIdService } from "@/services/products-service";
 import { getAbsoluteImageUrl } from "@/utils/get-absolute-image-url";
 import { calculateShippingSchema } from "@/schemas/calculate-shipping-schema";
 import { cartFinishSchema } from "@/schemas/cart-finish-schema";

@@ -10,6 +10,9 @@ const config: Config = {
         '^.+\\.(ts|tsx)$': 'ts-jest',
     },
     clearMocks: true,
+    moduleNameMapper: {
+        "^@/(.*)$": "<rootDir>/src/$1", // 👈 faz o @/ apontar para src/
+    },
 };
 
 export default config;
