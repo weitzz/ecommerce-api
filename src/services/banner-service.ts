@@ -6,8 +6,8 @@ export const getAllBannersService = async () => {
     });
 
     return banners.map(banner => ({
-        imageUrl: `media/banners/${banner.imageUrl}`,
+        imageUrl: `/media/banners/${banner.imageUrl}`,
+        linkUrl: banner.linkUrl
 
     }));
-
 }

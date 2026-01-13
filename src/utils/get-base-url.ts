@@ -1,3 +1,3 @@
 export const getBaseUrl = () => {
-    return process.env.API_URL || 'http://localhost:3333';
+    return process.env.BASE_URL || 'http://localhost:3333';
 }

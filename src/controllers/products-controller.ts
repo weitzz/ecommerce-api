@@ -19,16 +19,14 @@ export const getProducts: RequestHandler = async (req, res) => {
 
 
     const products = await getAllProductsService({ metadata: parsedMetadata, order: orderBy, limit: parsedLimit });
-    res.json(products);
 
     const productsWithAbsoluteUrl = products.map(product => ({
         ...product,
         image: product.image ? getAbsoluteImageUrl(product.image) : null,
         liked: false
-
     }));
 
-    res.json({ error: null, products: productsWithAbsoluteUrl })
+    return res.json(productsWithAbsoluteUrl);
 
 }
 
@@ -54,7 +52,7 @@ export const getProductById: RequestHandler = async (req, res) => {
     await incrementProductViewsService(product.id);
 
 
-    res.json({ error: null, product: productWithAbsoluteImages, category });
+    res.json({ productWithAbsoluteImages, category });
 
 }
 
@@ -78,5 +76,5 @@ export const getRelatedProducts: RequestHandler = async (req, res) => {
 
     }));
 
-    res.json({ error: null, products: productsWithAbsoluteUrl });
+    res.json(productsWithAbsoluteUrl);
 }

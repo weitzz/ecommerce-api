@@ -59,7 +59,7 @@ export const getAllProductsService = async (filters: ProductFilters) => {
     });
     return products.map(product => ({
         ...product,
-        image: product.images[0] ? `media/products/${product.images[0].imageUrl}` : null,
+        image: product.images[0] ? `/media/products/${product.images[0].imageUrl}` : null,
         images: undefined
     }));
 }
@@ -81,7 +81,7 @@ export const getProductByIdService = async (id: number) => {
     }
     return {
         ...product,
-        images: product.images.length > 0 ? product.images.map(img => `media/products/${img.imageUrl}`) : []
+        images: product.images.length > 0 ? product.images.map(img => `/media/products/${img.imageUrl}`) : []
     }
 }
 
@@ -123,7 +123,7 @@ export const getProductsFromSameCategoryService = async (id: number, limit: numb
     });
     return products.map(product => ({
         ...product,
-        image: product.images[0] ? `media/products/${product.images[0].imageUrl}` : null,
+        image: product.images[0] ? `/media/products/${product.images[0].imageUrl}` : null,
         images: undefined
     })
     )
