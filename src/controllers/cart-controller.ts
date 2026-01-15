@@ -49,16 +49,16 @@ export const finish: RequestHandler = async (req, res) => {
 
     if (!userId) {
         return res.status(401).json({ error: "Access denied" });
-
     }
 
-    const result = cartFinishSchema.safeParse(req.query)
+    const result = cartFinishSchema.safeParse(req.body)
     if (!result.success) {
         return res.status(400).json({ error: "Invalid cart" });
     }
-    const { cart, addressId } = result.data
-    const address = await getAddressByIdService(userId, addressId)
 
+    const { cart, addressId } = result.data
+
+    const address = await getAddressByIdService(userId, addressId)
     if (!address) {
         return res.status(400).json({ error: "Invalid address" });
     }
@@ -66,18 +66,27 @@ export const finish: RequestHandler = async (req, res) => {
     const shippingCost = 7
     const shippingDays = 3
 
-    const orderId = await createOrderService({ userId, cart, address, shippingCost, shippingDays })
-
+    const orderId = await createOrderService({
+        userId,
+        cart,
+        address,
+        shippingCost,
+        shippingDays
+    })
 
     if (!orderId) {
         return res.status(400).json({ error: "Failed to create order" });
     }
 
-    const url = await createPaymentLinkService({ cart, shippingCost, orderId })
+    const url = await createPaymentLinkService({
+        cart,
+        shippingCost,
+        orderId
+    })
 
     if (!url) {
         return res.status(400).json({ error: "Failed to create payment link" });
     }
 
-    res.json({ error: null, url }).status(201);
+    return res.status(201).json({ error: null, url });
 }

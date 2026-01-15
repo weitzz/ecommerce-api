@@ -22,17 +22,24 @@ export const getAllProductsService = async (filters: ProductFilters) => {
 
     let where: any = {}
     if (filters.metadata && typeof filters.metadata === 'object') {
-        let metaFilters = []
-        for (let categoryMetadataId in filters.metadata) {
+        const metaFilters = []
+        for (const categoryMetadataId in filters.metadata) {
             const value = filters.metadata[categoryMetadataId];
             if (typeof value !== 'string') continue;
             const valuesIds = value.split('|').map(v => v.trim()).filter(Boolean)
             if (valuesIds.length === 0) continue;
+
             metaFilters.push({
-                categoryMetadata: {
-                    some: {
-                        categoryMetadataId,
-                        metadataValueId: { in: valuesIds }
+                category: {
+                    categoryMetadata: {
+                        some: {
+                            id: categoryMetadataId,
+                            values: {
+                                some: {
+                                    id: { in: valuesIds }
+                                }
+                            }
+                        }
                     }
                 }
             })

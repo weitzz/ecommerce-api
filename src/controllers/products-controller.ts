@@ -26,7 +26,7 @@ export const getProducts: RequestHandler = async (req, res) => {
         liked: false
     }));
 
-    return res.json(productsWithAbsoluteUrl);
+    res.json({ products: productsWithAbsoluteUrl })
 
 }
 
@@ -52,7 +52,10 @@ export const getProductById: RequestHandler = async (req, res) => {
     await incrementProductViewsService(product.id);
 
 
-    res.json({ productWithAbsoluteImages, category });
+    res.json({
+        product: productWithAbsoluteImages,
+        category
+    });
 
 }
 
@@ -76,5 +79,5 @@ export const getRelatedProducts: RequestHandler = async (req, res) => {
 
     }));
 
-    res.json(productsWithAbsoluteUrl);
+    res.json({ products: productsWithAbsoluteUrl });
 }
