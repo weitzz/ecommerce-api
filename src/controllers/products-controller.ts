@@ -13,12 +13,13 @@ export const getProducts: RequestHandler = async (req, res) => {
     if (!parseResult.success) {
         return res.status(400).json({ error: 'Invalid query parameters' });
     }
-    const { metadata, orderBy, limit } = parseResult.data;
+    const { metadata, orderBy, limit, search } = parseResult.data;
     const parsedLimit = limit ? parseInt(limit) : undefined;
     const parsedMetadata = metadata ? JSON.parse(metadata) : undefined;
 
 
-    const products = await getAllProductsService({ metadata: parsedMetadata, order: orderBy, limit: parsedLimit });
+
+    const products = await getAllProductsService({ metadata: parsedMetadata, order: orderBy, limit: parsedLimit, search });
 
     const productsWithAbsoluteUrl = products.map(product => ({
         ...product,

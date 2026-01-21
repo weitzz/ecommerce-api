@@ -1,4 +1,4 @@
-import { PrismaClient } from '../src/generated/prisma'
+import { PrismaClient } from '../src/generated/prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -16,7 +16,6 @@ async function main() {
     if (existingCategory) {
         console.log('✅ Database has already been seeded. Skipping to avoid duplicate records.')
         console.log('Found existing category:', existingCategory.name)
-        return
     }
 
     console.log('📝 No existing data found. Proceeding with seeding...')
@@ -33,8 +32,15 @@ async function main() {
 
     // Create CategoryMetadata
     console.log('Creating category metadata...')
-    const categoryMetadata = await prisma.categoryMetadata.create({
-        data: {
+    const categoryMetadata = await prisma.categoryMetadata.upsert({
+        where: {
+            id: 'tech'
+        },
+        update: {
+            name: 'Tecnologia',
+            categoryId: category.id
+        },
+        create: {
             id: 'tech',
             name: 'Tecnologia',
             categoryId: category.id
@@ -54,7 +60,19 @@ async function main() {
         prisma.banner.create({
             data: {
                 imageUrl: 'banner_promo_2.jpg',
-                linkUrl: '/categories/algo'
+                linkUrl: '/categories/camisas'
+            }
+        }),
+        prisma.banner.create({
+            data: {
+                imageUrl: 'banner-3.png',
+                linkUrl: '/categories/camisas'
+            }
+        }),
+        prisma.banner.create({
+            data: {
+                imageUrl: 'banner-4.png',
+                linkUrl: '/categories/camisas'
             }
         })
     ])
@@ -126,6 +144,30 @@ async function main() {
                 name: 'Camisa PHP',
                 price: 69.90,
                 description: 'Camisa com estampa PHP, para desenvolvedores web',
+                categoryId: category.id
+            }
+        }),
+        prisma.product.create({
+            data: {
+                name: 'Camisa Html',
+                price: 59.90,
+                description: 'Camisa com estampa HTML, para desenvolvedores web',
+                categoryId: category.id
+            }
+        }),
+        prisma.product.create({
+            data: {
+                name: 'Camisa CSS',
+                price: 49.90,
+                description: 'Camisa com estampa CSS, para desenvolvedores web',
+                categoryId: category.id
+            }
+        }),
+        prisma.product.create({
+            data: {
+                name: 'Camisa Laravel',
+                price: 49.90,
+                description: 'Camisa com estampa Laravel, para desenvolvedores PHP',
                 categoryId: category.id
             }
         })

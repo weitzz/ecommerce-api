@@ -1,9 +1,10 @@
 import { prisma } from "../libs/prisma";
 
 type ProductFilters = {
-    metadata?: { [key: string]: string };
+    metadata?: Record<string, string[]>
     order?: string;
     limit?: number;
+    search?: string;
 }
 export const getAllProductsService = async (filters: ProductFilters) => {
     let orderBy = {}
@@ -21,35 +22,45 @@ export const getAllProductsService = async (filters: ProductFilters) => {
     }
 
     let where: any = {}
-    if (filters.metadata && typeof filters.metadata === 'object') {
-        const metaFilters = []
+    const andFilters: any[] = []
+    if (filters.metadata) {
         for (const categoryMetadataId in filters.metadata) {
-            const value = filters.metadata[categoryMetadataId];
-            if (typeof value !== 'string') continue;
-            const valuesIds = value.split('|').map(v => v.trim()).filter(Boolean)
-            if (valuesIds.length === 0) continue;
+            const values = filters.metadata[categoryMetadataId];
+            if (!Array.isArray(values) || values.length === 0) continue
 
-            metaFilters.push({
-                category: {
-                    categoryMetadata: {
-                        some: {
-                            id: categoryMetadataId,
-                            values: {
-                                some: {
-                                    id: { in: valuesIds }
-                                }
-                            }
-                        }
+            andFilters.push({
+                metadata: {
+                    some: {
+                        categoryMetadataId,
+                        metadataValueId: { in: values }
                     }
                 }
             })
         }
-        if (metaFilters.length > 0) {
-            where.AND = metaFilters
-
-        }
     }
 
+
+    if (filters.search) {
+        andFilters.push({
+            OR: [
+                {
+                    name: {
+                        contains: filters.search,
+                        mode: "insensitive"
+                    }
+                },
+                {
+                    description: {
+                        contains: filters.search,
+                        mode: "insensitive"
+                    }
+                }
+            ]
+        })
+    }
+    if (andFilters.length > 0) {
+        where.AND = andFilters
+    }
     const products = await prisma.product.findMany({
         select: {
             id: true,
