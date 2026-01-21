@@ -25,6 +25,17 @@ model User {
 
   userAddress UserAddress[]
   orders      Order[]
+  otps        Otp[]
+}
+
+model Otp {
+  id        String   @id
+  code      String
+  userId    Int
+  expiresAt DateTime
+  used      Boolean  @default(false)
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model UserAddress {

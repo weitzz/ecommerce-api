@@ -1,0 +1,6 @@
+ # Testes unitários (services, utils, etc.)
+
+ 
+│# Testes de integração (routes, controllers)
+
+--authMiddleware mudar para jwt token , inserir otp
