@@ -4,7 +4,7 @@ import { FavoriteSchema } from "@/schemas/favorite-schema";
 
 
 export const postFavoriteController: RequestHandler = async (req, res) => {
-    const userId = (req as any).userId
+    const userId = req.user?.id
     const result = FavoriteSchema.safeParse(req.body)
 
     if (!result.success) {
@@ -17,7 +17,7 @@ export const postFavoriteController: RequestHandler = async (req, res) => {
 }
 
 export const getListFavoritesController: RequestHandler = async (req, res) => {
-    const userId = (req as any).userId
+    const userId = req.user?.id
     const favorites = await listfavoritesByUserService(userId);
 
     return res.json(favorites);

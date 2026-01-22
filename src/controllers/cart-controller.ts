@@ -45,7 +45,7 @@ export const calculateShipping: RequestHandler = async (req, res) => {
 
 
 export const finish: RequestHandler = async (req, res) => {
-    const userId = (req as any).userId
+    const userId = req.user?.id
 
     if (!userId) {
         return res.status(401).json({ error: "Access denied" });

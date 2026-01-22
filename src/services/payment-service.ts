@@ -23,6 +23,7 @@ export const getOrderIdFromSessionService = async (sessionId: string) => {
 
         return parseInt(orderId);
     } catch (error) {
+        console.error("Stripe create session error:", error);
         return null;
     }
 

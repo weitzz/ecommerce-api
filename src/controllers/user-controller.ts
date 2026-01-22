@@ -24,25 +24,25 @@ export const registerUser: RequestHandler = async (req, res) => {
 
 
 export const loginUser: RequestHandler = async (req, res) => {
-    const resultLogin = loginUserSchema.safeParse(req.body)
+    const result = loginUserSchema.safeParse(req.body)
 
-    if (!resultLogin.success) {
+    if (!result.success) {
         return res.status(400).json({ error: "Invalid data" });
 
     }
-    const { email, password } = resultLogin.data;
+    const { email, password } = result.data;
 
     const token = await loginUserService(email, password);
     if (!token) {
-        return res.status(401).json({ error: "Access denied" })
+        return res.status(401).json({ error: "Invalid credentials" })
     }
 
-    res.json({ error: null, token });
+    res.json({ error: null, token })
 }
 
 
 export const addAddress: RequestHandler = async (req, res) => {
-    const userId = (req as any).userId
+    const userId = req.user?.id
 
     if (!userId) {
         return res.status(401).json({ error: "Access denied" });
@@ -67,7 +67,7 @@ export const addAddress: RequestHandler = async (req, res) => {
 
 
 export const getAddresses: RequestHandler = async (req, res) => {
-    const userId = (req as any).userId
+    const userId = req.user?.id
 
     if (!userId) {
         return res.status(401).json({ error: "Access denied" });

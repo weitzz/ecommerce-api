@@ -23,7 +23,7 @@ export const getOrderBySessionId: RequestHandler = async (req, res) => {
 
 
 export const getOrders: RequestHandler = async (req, res) => {
-    const userId = (req as any).userId;
+    const userId = req.user?.id
     if (!userId) {
         return res.status(401).json({ error: "Access denied" });
 
@@ -37,7 +37,7 @@ export const getOrders: RequestHandler = async (req, res) => {
 
 
 export const getOrderById: RequestHandler = async (req, res) => {
-    const userId = (req as any).userId;
+    const userId = req.user?.id
     if (!userId) {
         return res.status(401).json({ error: "Access denied" });
     }
@@ -53,16 +53,9 @@ export const getOrderById: RequestHandler = async (req, res) => {
         return res.status(404).json({ error: "Order not found" });
     }
 
-    const itemsWithAbsoluteUrl = order.orderProducts.map(item => ({
-        ...item,
-        product: {
-            ...item.product,
-            image: item.product.images[0] ? `media/products/${item.product.images[0].imageUrl}` : null
-        }
-    }))
 
     res.json({
         error: null,
-        order: { ...order, orderItems: itemsWithAbsoluteUrl }
+        order
     })
 }

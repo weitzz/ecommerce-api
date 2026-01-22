@@ -11,28 +11,33 @@ import { authMiddleware } from "@/middleware/auth";
 export const routes = Router();
 
 
-routes.get('/ping', (req, res) => {
-    res.json({ pong: true });
-})
-
+/* ===== PUBLIC ===== */
 routes.get('/banners', bannerController.getBanners);
 routes.get('/products', productsController.getProducts);
-routes.get('/product/:id', productsController.getProductById);
-routes.get('/product/:id/related', productsController.getRelatedProducts);
-routes.get('/category/:slug/metadata', categoryController.getCategoryWithMetadata);
+routes.get('/products/:id', productsController.getProductById);
+routes.get('/products/:id/related', productsController.getRelatedProducts);
+routes.get('/categories/:slug/metadata', categoryController.getCategoryWithMetadata);
+
+routes.post('/auth/register', userController.registerUser);
+routes.post('/auth/login', userController.loginUser);
 
 routes.post('/cart/mount', cartController.cartMont);
 routes.get('/cart/shipping', cartController.calculateShipping);
+
+/* ===== PROTECTED ===== */
 routes.post('/cart/finish', authMiddleware, cartController.finish);
 
-routes.post('/user/register', userController.registerUser);
-routes.post('/user/login', userController.loginUser);
-routes.post('/user/addresses', authMiddleware, userController.addAddress);
-routes.get('/user/addresses', authMiddleware, userController.getAddresses);
-routes.post('/user/favorites', authMiddleware, favoriteController.postFavoriteController)
-routes.get('/user/list-favorites', authMiddleware, favoriteController.getListFavoritesController)
+routes.post('/me/addresses', authMiddleware, userController.addAddress);
+routes.get('/me/addresses', authMiddleware, userController.getAddresses);
 
+routes.post('/me/favorites', authMiddleware, favoriteController.postFavoriteController);
+routes.get('/me/favorites', authMiddleware, favoriteController.getListFavoritesController);
+
+routes.get('/orders', authMiddleware, orderController.getOrders);
+routes.get('/orders/:id', authMiddleware, orderController.getOrderById);
+
+/* ===== WEBHOOK ===== */
 routes.post('/webhook/stripe', webhookController.stripe);
-routes.get('/orders/session', orderController.getOrderBySessionId)
-routes.get('/orders', authMiddleware, orderController.getOrders)
-routes.get('/orders/:id', authMiddleware, orderController.getOrderById)
+
+/* ===== OPTIONAL ===== */
+routes.get('/orders/session', orderController.getOrderBySessionId);

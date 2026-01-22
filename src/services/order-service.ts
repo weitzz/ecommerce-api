@@ -62,7 +62,7 @@ export const updateOrderStatusService = async (orderId: number, status: "paid" |
 
 export const getUserOrdersService = async (userId: number) => {
     return await prisma.order.findMany({
-        where: { id: userId },
+        where: { userId },
         select: {
             id: true,
             totalPrice: true,
