@@ -50,7 +50,7 @@ export const addAddress: RequestHandler = async (req, res) => {
     }
 
     const result = addAddressSchema.safeParse(req.body)
-    if (!result) {
+    if (!result.success) {
         return res.status(400).json({ error: "Invalid data" });
 
     }
