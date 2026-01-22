@@ -25,9 +25,7 @@ model User {
 
   userAddress UserAddress[]
   orders      Order[]
-<<<<<<< HEAD
   favorites   Favorites[]
-=======
   otps        Otp[]
 }
 
@@ -39,7 +37,6 @@ model Otp {
   used      Boolean  @default(false)
 
   user User @relation(fields: [userId], references: [id])
->>>>>>> feat/otp
 }
 
 model UserAddress {
