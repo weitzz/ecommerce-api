@@ -11,9 +11,9 @@ export const getOrderBySessionId: RequestHandler = async (req, res) => {
         return res.status(400).json({ error: "Session ID invalid" });
     }
 
-    const { session_id } = result.data;
+    const { sessionId } = result.data;
 
-    const orderId = await getOrderIdFromSessionService(session_id);
+    const orderId = await getOrderIdFromSessionService(sessionId);
     if (!orderId) {
         return res.status(404).json({ error: "Order not found" });
     }

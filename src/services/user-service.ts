@@ -3,6 +3,7 @@ import { Address } from "@/types/address"
 import { compare, hash } from "bcryptjs"
 import jwt from "jsonwebtoken"
 
+
 export const createUserService = async (name: string, email: string, password: string) => {
     const normalizedEmail = email.toLowerCase()
 
@@ -44,13 +45,19 @@ export const loginUserService = async (email: string, password: string) => {
 
 
 
-export const createAddressService = async (userId: number, address: Address) => {
-    return await prisma.userAddress.create({
-        data: {
-            ...address,
-            userId
-        }
-    })
+export const createAddressService = async (userId: number, input: Address) => {
+    const data = {
+        zipcode: input.zipcode.trim(),
+        street: input.street.trim(),
+        number: input.number.trim(),
+        city: input.city.trim(),
+        state: input.state.trim(),
+        country: input.country.trim(),
+        complement: input.complement?.trim() || null,
+        userId,
+    }
+
+    return prisma.userAddress.create({ data })
 
 }
 

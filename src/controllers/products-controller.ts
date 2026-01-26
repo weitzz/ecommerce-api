@@ -14,7 +14,7 @@ export const getProducts: RequestHandler = async (req, res) => {
         return res.status(400).json({ error: 'Invalid query parameters' });
     }
     const { metadata, orderBy, limit, search } = parseResult.data;
-    const parsedLimit = limit ? parseInt(limit) : undefined;
+    const parsedLimit = limit ? limit : undefined;
     const parsedMetadata = metadata ? JSON.parse(metadata) : undefined;
 
 

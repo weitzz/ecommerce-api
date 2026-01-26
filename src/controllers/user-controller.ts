@@ -43,12 +43,13 @@ export const loginUser: RequestHandler = async (req, res) => {
 
 export const addAddress: RequestHandler = async (req, res) => {
     const userId = req.user?.id
-
+    console.log("REQ BODY:", req.body)
     if (!userId) {
         return res.status(401).json({ error: "Access denied" });
 
     }
-
+    console.log("REQ BODY:", req.body)
+    console.log("REQ BODY TYPE:", typeof req.body)
     const result = addAddressSchema.safeParse(req.body)
     if (!result.success) {
         return res.status(400).json({ error: "Invalid data" });
@@ -56,10 +57,12 @@ export const addAddress: RequestHandler = async (req, res) => {
     }
 
     const address = await createAddressService(userId, result.data);
+    console.log(req.body)
 
     if (!address) {
         return res.status(400).json({ error: "Invalid data" })
     }
+
 
     res.status(201).json({ error: null, message: "Address registered successfully", address });
 }
