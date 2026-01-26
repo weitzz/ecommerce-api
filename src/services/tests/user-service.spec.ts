@@ -2,7 +2,7 @@ import { prisma } from "@/libs/prisma";
 import {
     createUserService,
     loginUserService,
-    GetUserByIdTokenService,
+    getUserByIdTokenService,
     createAddressService,
     getAddressService,
     getAddressByIdService,
@@ -119,11 +119,11 @@ describe("User Service", () => {
     });
 
 
-    describe("GetUserByIdTokenService", () => {
+    describe("getUserByIdTokenService", () => {
         it("deve retornar id do usuário se token válido", async () => {
             (prisma.user.findFirst as jest.Mock).mockResolvedValue({ id: 1 });
 
-            const result = await GetUserByIdTokenService("token-123");
+            const result = await getUserByIdTokenService("token-123");
 
             expect(result).toBe(1);
         });
@@ -131,7 +131,7 @@ describe("User Service", () => {
         it("deve retornar null se token inválido", async () => {
             (prisma.user.findFirst as jest.Mock).mockResolvedValue(null);
 
-            const result = await GetUserByIdTokenService("invalid-token");
+            const result = await getUserByIdTokenService("invalid-token");
 
             expect(result).toBeNull();
         });

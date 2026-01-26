@@ -6,18 +6,22 @@ export const getAllProductsService = async (filters: ProductFilters) => {
     const page = Math.max(filters.page ?? 1, 1)
     const limit = Math.min(filters.limit ?? 12, 50)
     const skip = (page - 1) * limit
-    let orderBy = {}
-    switch (filters.order) {
+    let orderBy: any = {}
+    switch (filters.orderBy) {
         case 'views':
-        default:
-            orderBy = { viewsCount: 'desc' };
-            break;
+            orderBy = { viewsCount: filters.order ?? 'desc' }
+            break
+
         case 'selling':
-            orderBy = { price: 'desc' };
-            break;
+            orderBy = { price: filters.order ?? 'desc' }
+            break
+
         case 'price':
-            orderBy = { price: 'asc' };
-            break;
+            orderBy = { price: filters.order ?? 'asc' }
+            break
+
+        default:
+            orderBy = { createdAt: 'desc' }
     }
 
     let where: any = {}

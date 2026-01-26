@@ -3,7 +3,7 @@
  
 │# Testes de integração (routes, controllers)
 
---authMiddleware mudar para jwt token , inserir otp
+--authMiddleware mudar para jwt token 
 
 
 🧠 Regra mental pra nunca errar

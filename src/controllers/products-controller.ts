@@ -13,7 +13,7 @@ export const getProducts: RequestHandler = async (req, res) => {
     if (!parseResult.success) {
         return res.status(400).json({ error: 'Invalid query parameters' });
     }
-    const { metadata, orderBy, limit, page, search } = parseResult.data;
+    const { metadata, orderBy, order, limit, page, search } = parseResult.data;
     let parsedMetadata: Record<string, string[]> | undefined;
 
     try {
@@ -25,7 +25,8 @@ export const getProducts: RequestHandler = async (req, res) => {
 
     const result = await getAllProductsService({
         metadata: parsedMetadata,
-        order: orderBy,
+        orderBy,
+        order,
         limit,
         page,
         search
