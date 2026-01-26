@@ -13,21 +13,33 @@ export const getProducts: RequestHandler = async (req, res) => {
     if (!parseResult.success) {
         return res.status(400).json({ error: 'Invalid query parameters' });
     }
-    const { metadata, orderBy, limit, search } = parseResult.data;
-    const parsedLimit = limit ? limit : undefined;
-    const parsedMetadata = metadata ? JSON.parse(metadata) : undefined;
+    const { metadata, orderBy, limit, page, search } = parseResult.data;
+    let parsedMetadata: Record<string, string[]> | undefined;
+
+    try {
+        parsedMetadata = metadata ? JSON.parse(metadata) : undefined;
+    } catch {
+        return res.status(400).json({ error: 'Invalid metadata format' });
+    }
 
 
+    const result = await getAllProductsService({
+        metadata: parsedMetadata,
+        order: orderBy,
+        limit,
+        page,
+        search
+    });
 
-    const products = await getAllProductsService({ metadata: parsedMetadata, order: orderBy, limit: parsedLimit, search });
-
-    const productsWithAbsoluteUrl = products.map(product => ({
+    const data = result.data.map(product => ({
         ...product,
         image: product.image ? getAbsoluteImageUrl(product.image) : null,
         liked: false
     }));
 
-    res.json({ products: productsWithAbsoluteUrl })
+    console.log(data)
+
+    res.json({ data, meta: result.meta });
 
 }
 
@@ -49,12 +61,12 @@ export const getProductById: RequestHandler = async (req, res) => {
         images: product.images.map(image => getAbsoluteImageUrl(image)),
 
     }
-    const category = await getCategoryService(product.categoryId);
     await incrementProductViewsService(product.id);
+    const category = await getCategoryService(product.categoryId);
 
 
     res.json({
-        product: productWithAbsoluteImages,
+        data: productWithAbsoluteImages,
         category
     });
 
@@ -80,5 +92,5 @@ export const getRelatedProducts: RequestHandler = async (req, res) => {
 
     }));
 
-    res.json({ products: productsWithAbsoluteUrl });
+    res.json({ data: productsWithAbsoluteUrl });
 }

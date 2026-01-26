@@ -1,12 +1,11 @@
+import { ProductFilters } from "@/types/product.filters";
 import { prisma } from "../libs/prisma";
 
-type ProductFilters = {
-    metadata?: Record<string, string[]>
-    order?: string;
-    limit?: number;
-    search?: string;
-}
+
 export const getAllProductsService = async (filters: ProductFilters) => {
+    const page = Math.max(filters.page ?? 1, 1)
+    const limit = Math.min(filters.limit ?? 12, 50)
+    const skip = (page - 1) * limit
     let orderBy = {}
     switch (filters.order) {
         case 'views':
@@ -61,26 +60,47 @@ export const getAllProductsService = async (filters: ProductFilters) => {
     if (andFilters.length > 0) {
         where.AND = andFilters
     }
-    const products = await prisma.product.findMany({
-        select: {
-            id: true,
-            name: true,
-            price: true,
-            images: {
-                take: 1,
-                orderBy: { id: 'asc' }
+
+
+    const [products, total] = await Promise.all([
+        prisma.product.findMany({
+            where,
+            orderBy,
+            skip,
+            take: limit,
+            select: {
+                id: true,
+                name: true,
+                price: true,
+                images: {
+                    take: 1,
+                    orderBy: { id: 'asc' }
+                }
             }
-        },
-        where,
-        orderBy,
-        take: filters.limit ?? undefined
-    });
-    return products.map(product => ({
+        }),
+        prisma.product.count({ where })
+    ])
+
+
+    const data = products.map(product => ({
         ...product,
         image: product.images[0] ? `/media/products/${product.images[0].imageUrl}` : null,
-        images: undefined
+        images: undefined,
     }));
+
+
+    return {
+        data,
+        meta: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit)
+        }
+    }
 }
+
+
 
 export const getProductByIdService = async (id: number) => {
     const product = await prisma.product.findUnique({
@@ -105,7 +125,7 @@ export const getProductByIdService = async (id: number) => {
 
 
 export const incrementProductViewsService = async (id: number) => {
-    await prisma.product.update({
+    await prisma.product.updateMany({
         where: { id },
         data: {
             viewsCount: {
