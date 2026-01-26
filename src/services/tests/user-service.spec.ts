@@ -2,13 +2,12 @@ import { prisma } from "@/libs/prisma";
 import {
     createUserService,
     loginUserService,
-    getUserByIdTokenService,
     createAddressService,
     getAddressService,
     getAddressByIdService,
 } from "@/services/user-service";
 import { compare, hash } from "bcryptjs";
-import { v4 } from "uuid";
+import jwt from "jsonwebtoken"
 
 jest.mock("@/libs/prisma", () => ({
     prisma: {
@@ -26,14 +25,15 @@ jest.mock("@/libs/prisma", () => ({
     },
 }));
 
+jest.mock("jsonwebtoken", () => ({
+    sign: jest.fn()
+}))
+
 jest.mock("bcryptjs", () => ({
     hash: jest.fn(),
     compare: jest.fn(),
 }));
 
-jest.mock("uuid", () => ({
-    v4: jest.fn(),
-}));
 
 describe("User Service", () => {
     beforeEach(() => {
@@ -83,22 +83,34 @@ describe("User Service", () => {
 
 
     describe("loginUserService", () => {
-        it("deve retornar token se login bem-sucedido", async () => {
+        it("deve retornar token JWT se login bem-sucedido", async () => {
             (prisma.user.findUnique as jest.Mock).mockResolvedValue({
                 id: 1,
+                email: "john@test.com",
                 password: "hashedPassword",
             });
+
             (compare as jest.Mock).mockResolvedValue(true);
-            (v4 as jest.Mock).mockReturnValue("token-123");
+            (jwt.sign as jest.Mock).mockReturnValue("jwt-token");
 
-            const result = await loginUserService("john@test.com", "123456");
+            const result = await loginUserService("JOHN@test.com", "123456");
 
-            expect(result).toBe("token-123");
-            expect(prisma.user.update).toHaveBeenCalledWith({
-                where: { id: 1 },
-                data: { token: "token-123" },
+            expect(result).toBe("jwt-token");
+
+            expect(prisma.user.findUnique).toHaveBeenCalledWith({
+                where: { email: "john@test.com" }
             });
+
+            expect(jwt.sign).toHaveBeenCalledWith(
+                { id: 1, email: "john@test.com" },
+                process.env.JWT_SECRET,
+                { expiresIn: "3d" }
+            );
         });
+
+
+
+
 
         it("deve retornar null se usuário não existir", async () => {
             (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
@@ -106,36 +118,21 @@ describe("User Service", () => {
             const result = await loginUserService("john@test.com", "123456");
 
             expect(result).toBeNull();
+            expect(jwt.sign).not.toHaveBeenCalled();
         });
 
         it("deve retornar null se senha inválida", async () => {
-            (prisma.user.findUnique as jest.Mock).mockResolvedValue({ id: 1, password: "hashedPassword" });
+            (prisma.user.findUnique as jest.Mock).mockResolvedValue({ id: 1, email: "john@test.com", password: "hashedPassword" });
             (compare as jest.Mock).mockResolvedValue(false);
 
             const result = await loginUserService("john@test.com", "wrongpass");
 
             expect(result).toBeNull();
+            expect(jwt.sign).not.toHaveBeenCalled();
         });
     });
 
 
-    describe("getUserByIdTokenService", () => {
-        it("deve retornar id do usuário se token válido", async () => {
-            (prisma.user.findFirst as jest.Mock).mockResolvedValue({ id: 1 });
-
-            const result = await getUserByIdTokenService("token-123");
-
-            expect(result).toBe(1);
-        });
-
-        it("deve retornar null se token inválido", async () => {
-            (prisma.user.findFirst as jest.Mock).mockResolvedValue(null);
-
-            const result = await getUserByIdTokenService("invalid-token");
-
-            expect(result).toBeNull();
-        });
-    });
 
 
     describe("createAddressService", () => {

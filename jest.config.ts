@@ -6,6 +6,14 @@ const config: Config = {
     roots: ['<rootDir>/src'],
     moduleFileExtensions: ['ts', 'js', 'json'],
     detectOpenHandles: true,
+    collectCoverage: true,
+    collectCoverageFrom: [
+        'src/services/**/*.ts',
+        '!src/**/*.d.ts',
+        '!src/**/index.ts',
+    ],
+    coverageDirectory: 'coverage',
+    coverageReporters: ['text', 'lcov'],
     transform: {
         '^.+\\.(ts|tsx)$': 'ts-jest',
     },

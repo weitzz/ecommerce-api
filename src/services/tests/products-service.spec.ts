@@ -11,7 +11,8 @@ jest.mock("@/libs/prisma", () => ({
         product: {
             findMany: jest.fn(),
             findUnique: jest.fn(),
-            update: jest.fn(),
+            count: jest.fn(),
+            updateMany: jest.fn(),
         },
     },
 }));
@@ -23,64 +24,92 @@ describe("Product Service", () => {
 
 
     describe("getAllProductsService", () => {
-        it("deve retornar produtos com image formatado", async () => {
+        it("deve paginar corretamente", async () => {
             (prisma.product.findMany as jest.Mock).mockResolvedValue([
-                { id: 1, name: "Produto 1", price: 50, images: [{ imageUrl: "img1.png" }] },
+                { id: 1, name: "Produto", price: 50, images: [{ imageUrl: "img.png" }] },
             ]);
 
-            const result = await getAllProductsService({ order: "views", limit: 10 });
+            (prisma.product.count as jest.Mock).mockResolvedValue(20);
 
-            expect(prisma.product.findMany).toHaveBeenCalledWith(
-                expect.objectContaining({ orderBy: { viewsCount: "desc" }, take: 10 })
-            );
-            expect(result[0].image).toBe("media/products/img1.png");
-            expect(result[0].images).toBeUndefined();
-        });
+            const result = await getAllProductsService({ page: 2, limit: 10 });
 
-        it("deve retornar produtos sem image se images vazio", async () => {
-            (prisma.product.findMany as jest.Mock).mockResolvedValue([
-                { id: 2, name: "Produto 2", price: 20, images: [] },
-            ]);
-
-            const result = await getAllProductsService({});
-
-            expect(result[0].image).toBeNull();
-        });
-
-        it("deve aplicar filtros de metadata", async () => {
-            (prisma.product.findMany as jest.Mock).mockResolvedValue([]);
-
-            await getAllProductsService({ metadata: { "1": "5|6" } });
-
-            expect(prisma.product.findMany).toHaveBeenCalledWith(
+            expect(prisma.product.findMany as jest.Mock).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    where: { AND: [{ categoryMetadata: { some: { categoryMetadataId: "1", metadataValueId: { in: ["5", "6"] } } } }] },
+                    skip: 10,
+                    take: 10,
+                })
+            );
+
+            expect(result.meta).toEqual({
+                page: 2,
+                limit: 10,
+                total: 20,
+                totalPages: 2,
+            });
+        });
+        it("deve ordenar por preço desc", async () => {
+            (prisma.product.findMany as jest.Mock).mockResolvedValue([]);
+            (prisma.product.count as jest.Mock).mockResolvedValue(0);
+
+            await getAllProductsService({ orderBy: "price", order: "desc" });
+
+            expect(prisma.product.findMany as jest.Mock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    orderBy: { price: "desc" },
                 })
             );
         });
-    });
-    describe("getAllProductsService - metadata edge cases", () => {
-        it("ignora valor que não seja string", async () => {
-            (prisma.product.findMany as jest.Mock).mockResolvedValue([]);
 
-            const result = await getAllProductsService({ metadata: { "1": 123 as any } });
+
+        it("deve aplicar filtro de metadata", async () => {
+            (prisma.product.findMany as jest.Mock).mockResolvedValue([]);
+            (prisma.product.count as jest.Mock).mockResolvedValue(0);
+
+            await getAllProductsService({
+                metadata: { size: ["p", "m"] },
+            });
 
             expect(prisma.product.findMany).toHaveBeenCalledWith(
-                expect.objectContaining({ where: {} })
+                expect.objectContaining({
+                    where: {
+                        AND: [
+                            {
+                                metadata: {
+                                    some: {
+                                        categoryMetadataId: "size",
+                                        metadataValueId: { in: ["p", "m"] },
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                })
             );
-            expect(result).toEqual([])
         });
 
-        it("ignora valor string vazia ou só espaços", async () => {
+
+        it("deve aplicar busca", async () => {
             (prisma.product.findMany as jest.Mock).mockResolvedValue([]);
+            (prisma.product.count as jest.Mock).mockResolvedValue(0);
 
-            const result = await getAllProductsService({ metadata: { "1": "   |  " } });
+            await getAllProductsService({ search: "camisa" });
 
-            expect(prisma.product.findMany).toHaveBeenCalledWith(
-                expect.objectContaining({ where: {} })
+            expect(prisma.product.findMany as jest.Mock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    where: {
+                        AND: [
+                            {
+                                OR: [
+                                    { name: expect.any(Object) },
+                                    { description: expect.any(Object) },
+                                ],
+                            },
+                        ],
+                    },
+                })
             );
-            expect(result).toEqual([])
         });
+
     });
 
 
@@ -92,13 +121,13 @@ describe("Product Service", () => {
                 name: "Produto Teste",
                 description: "Desc",
                 price: 100,
-                categoryId: 2,
+                categoryId: 1,
                 images: [{ imageUrl: "img1.png" }, { imageUrl: "img2.png" }],
             });
 
             const result = await getProductByIdService(1);
 
-            expect(result.images).toEqual(["media/products/img1.png", "media/products/img2.png"]);
+            expect(result.images).toEqual(["/media/products/img1.png", "/media/products/img2.png"]);
         });
 
         it("deve retornar null se produto não existir", async () => {
@@ -128,11 +157,11 @@ describe("Product Service", () => {
 
     describe("incrementProductViewsService", () => {
         it("deve chamar prisma.update para incrementar views", async () => {
-            (prisma.product.update as jest.Mock).mockResolvedValue({});
+            (prisma.product.updateMany as jest.Mock).mockResolvedValue({ count: 1 });
 
             await incrementProductViewsService(1);
 
-            expect(prisma.product.update).toHaveBeenCalledWith({
+            expect(prisma.product.updateMany).toHaveBeenCalledWith({
                 where: { id: 1 },
                 data: { viewsCount: { increment: 1 } },
             });
@@ -141,10 +170,10 @@ describe("Product Service", () => {
 
 
     describe("getProductsFromSameCategoryService", () => {
-        it("deve retornar produtos da mesma categoria com image", async () => {
+        it("deve retornar produtos da mesma categoria ", async () => {
             (prisma.product.findUnique as jest.Mock).mockResolvedValue({ categoryId: 10 });
             (prisma.product.findMany as jest.Mock).mockResolvedValue([
-                { id: 2, name: "Produto 2", price: 50, images: [{ imageUrl: "img2.png" }] },
+                { id: 2, name: "Produto 2", price: 50, images: [{ imageUrl: "product_1_1.png" }] },
             ]);
 
             const result = await getProductsFromSameCategoryService(1);
@@ -157,7 +186,7 @@ describe("Product Service", () => {
                     orderBy: { viewsCount: "desc" },
                 })
             );
-            expect(result[0].image).toBe("media/products/img2.png");
+            expect(result[0].image).toBe("/media/products/product_1_1.png");
         });
 
         it("deve retornar array vazio se produto não existir", async () => {

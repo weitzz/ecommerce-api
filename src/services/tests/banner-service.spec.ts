@@ -29,8 +29,8 @@ describe("getAllBannersService", () => {
         });
 
         expect(result).toEqual([
-            { imageUrl: "media/banners/banner1.png" },
-            { imageUrl: "media/banners/banner2.jpg" }
+            { imageUrl: "/media/banners/banner1.png", linkUrl: "https://example.com/1" },
+            { imageUrl: "/media/banners/banner2.jpg", linkUrl: "https://example.com/2" }
         ]);
     });
 
