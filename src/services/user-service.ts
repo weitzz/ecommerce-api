@@ -27,9 +27,6 @@ export const createUserService = async (name: string, email: string, password: s
 }
 
 export const loginUserService = async (email: string, password: string) => {
-    if (!process.env.JWT_SECRET) {
-        throw new Error("JWT_SECRET not configured");
-    }
     const normalizedEmail = email.toLowerCase()
     const user = await prisma.user.findUnique({ where: { email: normalizedEmail } })
     if (!user) return null

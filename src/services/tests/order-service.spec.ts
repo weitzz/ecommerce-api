@@ -117,7 +117,7 @@ describe("Order Service", () => {
 
             expect(result).toEqual(mockOrders);
             expect(prisma.order.findMany).toHaveBeenCalledWith({
-                where: { id: 1 },
+                where: { userId: 1 },
                 select: { id: true, totalPrice: true, status: true, createdAt: true },
                 orderBy: { createdAt: "desc" },
             });
