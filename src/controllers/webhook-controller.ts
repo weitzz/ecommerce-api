@@ -2,6 +2,7 @@ import { getConstructEvent } from "@/libs/stripe";
 import { updateOrderStatusService } from "@/services/order-service";
 import { getStripeWebhookSecret } from "@/utils/get-stripe-webhook-secret";
 import { RequestHandler } from "express";
+import Stripe from "stripe";
 
 export const stripe: RequestHandler = async (req, res) => {
     const signature = req.headers['stripe-signature'] as string
@@ -10,8 +11,8 @@ export const stripe: RequestHandler = async (req, res) => {
 
     const event = await getConstructEvent(rawBody, signature, webhookKey)
     if (event) {
-        const session = event.data.object as any
-        const orderId = parseInt(session.metadata?.orderId)
+        const session = event.data.object as Stripe.Checkout.Session
+        const orderId = Number(session.metadata?.orderId)
 
 
         switch (event.type) {
@@ -28,7 +29,5 @@ export const stripe: RequestHandler = async (req, res) => {
         }
     }
 
-
-
-    res.json({ error: null });
+    res.json({ received: true });
 }

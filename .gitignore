@@ -7,4 +7,6 @@ src/generated/prisma/
 src/generated
 src/anotacoes/*
 
-/anotacoes
+/anotacoes/anotacoes
+src/anotacoes/.anotacoes
+src/anotacoes/.anotacoes/*

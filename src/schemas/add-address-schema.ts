@@ -1,12 +1,12 @@
 import z from 'zod';
 
 export const addAddressSchema = z.object({
-    zipcode: z.string().min(5, 'CEP inválido'),
-    street: z.string().min(1, 'Rua obrigatória'),
-    number: z.string().min(1, 'Número obrigatório'),
-    city: z.string().min(1, 'Cidade obrigatória'),
-    state: z.string().length(2, 'Estado inválido'),
-    country: z.string().min(1, "País obrigatório"),
+    zipcode: z.string({ error: issue => issue.input === undefined ? "CEP é obrigatório" : "CEP inválido" }).min(5, 'CEP inválido'),
+    street: z.string({ error: issue => issue.input === undefined ? "Rua é obrigatória" : "Rua inválida" }).min(1, 'Rua obrigatória'),
+    number: z.string({ error: issue => issue.input === undefined ? "Número é obrigatório" : "Número inválido" }).min(1, 'Número obrigatório'),
+    city: z.string({ error: issue => issue.input === undefined ? "Cidade é obrigatória" : "Cidade inválida" }).min(1, 'Cidade obrigatória'),
+    state: z.string({ error: issue => issue.input === undefined ? "Estado é obrigatório" : "Estado inválido" }).length(2, 'Estado inválido'),
+    country: z.string({ error: issue => issue.input === undefined ? "País é obrigatório" : "País inválido" }).min(1, "País obrigatório"),
     complement: z.string().nullable().optional(),
 
 });

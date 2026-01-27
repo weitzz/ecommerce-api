@@ -6,12 +6,20 @@ import { getAbsoluteImageUrl } from '@/utils/get-absolute-image-url';
 import { RequestHandler } from 'express';
 import { getCategoryService } from '@/services/category-service';
 import { getProductsQuerySchema } from '@/schemas/get-product-query-schema';
+import { AppError } from "@/shared/errors/app-error";
+import { HttpStatus } from "@/shared/http/status-codes";
+
 
 export const getProducts: RequestHandler = async (req, res) => {
     const parseResult = getProductSchema.safeParse(req.query);
 
     if (!parseResult.success) {
-        return res.status(400).json({ error: 'Invalid query parameters' });
+        throw new AppError(
+            "Invalid query parameters",
+            "VALIDATION_ERROR",
+            HttpStatus.BAD_REQUEST,
+            parseResult.error.flatten()
+        );
     }
     const { metadata, orderBy, order, limit, page, search } = parseResult.data;
     let parsedMetadata: Record<string, string[]> | undefined;
@@ -19,7 +27,11 @@ export const getProducts: RequestHandler = async (req, res) => {
     try {
         parsedMetadata = metadata ? JSON.parse(metadata) : undefined;
     } catch {
-        return res.status(400).json({ error: 'Invalid metadata format' });
+        throw new AppError(
+            "Invalid metadata format",
+            "VALIDATION_ERROR",
+            HttpStatus.BAD_REQUEST
+        );
     }
 
 
@@ -38,9 +50,8 @@ export const getProducts: RequestHandler = async (req, res) => {
         liked: false
     }));
 
-    console.log(data)
 
-    res.json({ data, meta: result.meta });
+    return res.status(HttpStatus.OK).json({ success: true, data, meta: result.meta });
 
 }
 
@@ -48,13 +59,22 @@ export const getProductById: RequestHandler = async (req, res) => {
     const productId = getProductByIdSchema.safeParse(req.params);
 
     if (!productId.success) {
-        return res.status(400).json({ error: 'Invalid product ID' });
+        throw new AppError(
+            "Invalid product ID",
+            "VALIDATION_ERROR",
+            HttpStatus.BAD_REQUEST,
+            productId.error.flatten()
+        );
     }
 
     const { id } = productId.data;
-    const product = await getProductByIdService(parseInt(id));
+    const product = await getProductByIdService(Number(id));
     if (!product) {
-        return res.status(404).json({ error: 'Product not found' });
+        throw new AppError(
+            "Product not found",
+            "PRODUCT_NOT_FOUND",
+            HttpStatus.NOT_FOUND
+        )
     }
 
     const productWithAbsoluteImages = {
@@ -66,9 +86,12 @@ export const getProductById: RequestHandler = async (req, res) => {
     const category = await getCategoryService(product.categoryId);
 
 
-    res.json({
-        data: productWithAbsoluteImages,
-        category
+    return res.status(HttpStatus.OK).json({
+        success: true,
+        data: {
+            product: productWithAbsoluteImages,
+            category
+        }
     });
 
 }
@@ -79,7 +102,15 @@ export const getRelatedProducts: RequestHandler = async (req, res) => {
     const queryResult = getProductsQuerySchema.safeParse(req.query);
 
     if (!productId.success || !queryResult.success) {
-        return res.status(400).json({ error: 'Invalid product ID or query parameters' });
+        throw new AppError(
+            "Invalid product ID or query parameters",
+            "VALIDATION_ERROR",
+            HttpStatus.BAD_REQUEST,
+            {
+                ...(!productId.success ? { params: productId.error.flatten() } : {}),
+                ...(!queryResult.success ? { query: queryResult.error.flatten() } : {}),
+            }
+        )
     }
 
     const { id } = productId.data;
@@ -93,5 +124,5 @@ export const getRelatedProducts: RequestHandler = async (req, res) => {
 
     }));
 
-    res.json({ data: productsWithAbsoluteUrl });
+    return res.status(HttpStatus.OK).json({ success: true, data: productsWithAbsoluteUrl });
 }

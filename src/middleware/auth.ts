@@ -1,20 +1,29 @@
 import { NextFunction, Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import { JwtPayload } from "../types/jwt-payload"
+import { AppError } from "@/shared/errors/app-error"
+import { HttpStatus } from "@/shared/http/status-codes"
 
 export const authMiddleware = async (request: Request, response: Response, next: NextFunction) => {
 
     const authHeader = request.headers.authorization
     if (!authHeader) {
-        return response.status(401).json({ error: "Token não fornecido" })
+        throw new AppError(
+            "Token não fornecido",
+            "AUTH_TOKEN_MISSING",
+            HttpStatus.UNAUTHORIZED
+        )
     }
 
-    const [token] = authHeader.split(" ")
+    const [type, token] = authHeader.split(" ")
 
-    if (!token) {
-        return response.status(401).json({ error: "Token mal formatado" })
+    if (type !== "Bearer" || !token) {
+        throw new AppError(
+            "Token mal formatado",
+            "AUTH_TOKEN_INVALID_FORMAT",
+            HttpStatus.UNAUTHORIZED
+        )
     }
-
 
     try {
         const decoded = jwt.verify(
@@ -24,8 +33,12 @@ export const authMiddleware = async (request: Request, response: Response, next:
 
         request.user = decoded
         next()
-    } catch {
-        return response.status(401).json({ error: "Token inválido ou expirado" })
+    } catch (err) {
+        throw new AppError(
+            "Token inválido ou expirado",
+            "AUTH_TOKEN_INVALID",
+            HttpStatus.UNAUTHORIZED
+        )
     }
 
 }

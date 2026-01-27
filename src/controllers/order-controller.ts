@@ -2,60 +2,88 @@ import { getOrderBySessionIdSchema } from "@/schemas/get-by-session-order-id-sch
 import { getOrderByIdSchema } from "@/schemas/get-order-schema";
 import { getOrderByIdService, getUserOrdersService } from "@/services/order-service";
 import { getOrderIdFromSessionService } from "@/services/payment-service";
+import { AppError } from "@/shared/errors/app-error";
+import { HttpStatus } from "@/shared/http/status-codes";
 import { RequestHandler } from "express";
 
 
 export const getOrderBySessionId: RequestHandler = async (req, res) => {
     const result = getOrderBySessionIdSchema.safeParse(req.query);
     if (!result.success) {
-        return res.status(400).json({ error: "Session ID invalid" });
+        throw new AppError(
+            "Session ID invalid",
+            "VALIDATION_ERROR",
+            HttpStatus.BAD_REQUEST,
+            result.error.flatten()
+        )
     }
 
     const { sessionId } = result.data;
 
     const orderId = await getOrderIdFromSessionService(sessionId);
     if (!orderId) {
-        return res.status(404).json({ error: "Order not found" });
+        throw new AppError(
+            "Order not found",
+            "ORDER_NOT_FOUND",
+            HttpStatus.NOT_FOUND
+        )
     }
 
-    res.json({ error: null, orderId })
+    return res.status(HttpStatus.OK).json({ success: true, data: { orderId } })
 }
 
 
 export const getOrders: RequestHandler = async (req, res) => {
     const userId = req.user?.id
     if (!userId) {
-        return res.status(401).json({ error: "Access denied" });
+        throw new AppError(
+            "Access denied",
+            "UNAUTHORIZED",
+            HttpStatus.UNAUTHORIZED
+        )
 
     }
 
     const orders = await getUserOrdersService(userId)
 
 
-    res.json({ error: null, orders })
+    return res.status(HttpStatus.OK).json({ success: true, data: orders })
 }
 
 
 export const getOrderById: RequestHandler = async (req, res) => {
     const userId = req.user?.id
     if (!userId) {
-        return res.status(401).json({ error: "Access denied" });
+        throw new AppError(
+            "Access denied",
+            "UNAUTHORIZED",
+            HttpStatus.UNAUTHORIZED
+        )
     }
     const result = getOrderByIdSchema.safeParse(req.params);
     if (!result.success) {
-        return res.status(400).json({ error: "ID invalid" });
+        throw new AppError(
+            "ID invalid",
+            "VALIDATION_ERROR",
+            HttpStatus.BAD_REQUEST,
+            result.error.flatten()
+        )
     }
 
     const { id } = result.data;
 
-    const order = await getOrderByIdService(parseInt(id), userId);
+    const order = await getOrderByIdService(Number(id), userId);
     if (!order) {
-        return res.status(404).json({ error: "Order not found" });
+        throw new AppError(
+            "Order not found",
+            "ORDER_NOT_FOUND",
+            HttpStatus.NOT_FOUND
+        )
     }
 
 
-    res.json({
-        error: null,
-        order
+    return res.status(HttpStatus.OK).json({
+        success: true,
+        data: order
     })
 }
