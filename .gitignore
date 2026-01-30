@@ -5,8 +5,8 @@ src/generated/prisma/
 
 /generated/prisma
 src/generated
-src/anotacoes/*
 
-/anotacoes/anotacoes
-src/anotacoes/.anotacoes
-src/anotacoes/.anotacoes/*
+
+docs/todos.md
+
+src/docs/todos.md
