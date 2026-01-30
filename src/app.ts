@@ -2,8 +2,11 @@ import express from "express";
 import cors from "cors";
 import { routes } from "../src/routes/main";
 import { errorHandler } from "./shared/errors/error-handler";
+import swaggerUi from 'swagger-ui-express'
+import { swaggerConfig } from './docs/swagger'
 
 const app = express();
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig))
 app.use(cors());
 app.use("/webhook/stripe", express.raw({ type: "application/json" }));
 app.use(express.json());
