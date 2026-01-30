@@ -25,7 +25,7 @@ export const registerUser: RequestHandler = async (req, res) => {
         throw new AppError(
             "Email already registered",
             "EMAIL_ALREADY_REGISTERED",
-            HttpStatus.BAD_REQUEST
+            HttpStatus.CONFLICT
         );
     }
 

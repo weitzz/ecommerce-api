@@ -9,6 +9,7 @@ const config: Config = {
     collectCoverage: true,
     collectCoverageFrom: [
         'src/services/**/*.ts',
+        'src/controllers/**/*.ts',
         '!src/**/*.d.ts',
         '!src/**/index.ts',
     ],
@@ -19,7 +20,7 @@ const config: Config = {
     },
     clearMocks: true,
     moduleNameMapper: {
-        "^@/(.*)$": "<rootDir>/src/$1", // 👈 faz o @/ apontar para src/
+        '^@/(.*)$': '<rootDir>/src/$1',
     },
 };
 
