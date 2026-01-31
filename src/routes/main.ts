@@ -12,17 +12,66 @@ export const routes = Router();
 
 
 
-/** * @openapi
- * /banners:
- *   get:
- *     tags:
- *       - Banners
- *     summary: Lista banners
+/**
+ * @openapi
+ * /auth/register:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Registro de usuário
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: João Silva
+ *               email:
+ *                 type: string
+ *                 example: joao@email.com
+ *               password:
+ *                 type: string
+ *                 example: 123456
+ *     responses:
+ *       201:
+ *         description: Usuário registrado
+ */
+routes.post('/auth/register', userController.registerUser);
+/**
+ * @openapi
+ * /auth/login:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Login do usuário
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: joao@email.com
+ *               password:
+ *                 type: string
+ *                 example: 123456
  *     responses:
  *       200:
- *         description: Lista de banners
+ *         description: Login realizado
+ *       401:
+ *         description: Credenciais inválidas
  */
-routes.get('/banners', bannerController.getBanners);
+routes.post('/auth/login', userController.loginUser);
 /**
  * @openapi
  * /products:
@@ -90,40 +139,12 @@ routes.get('/products/:id/related', productsController.getRelatedProducts);
  *         required: true
  *         schema:
  *           type: string
+ *          example: camisas
  *     responses:
  *       200:
  *         description: Metadados da categoria
  */
 routes.get('/categories/:slug/metadata', categoryController.getCategoryWithMetadata);
-/**
- * @openapi
- * /auth/register:
- *   post:
- *     tags: [Auth]
- *     summary: Registro de usuário
- *     requestBody:
- *       required: true
- *     responses:
- *       201:
- *         description: Usuário registrado
- */
-routes.post('/auth/register', userController.registerUser);
-/**
- * @openapi
- * /auth/login:
- *   post:
- *     tags: [Auth]
- *     summary: Login do usuário
- *     requestBody:
- *       required: true
- *     responses:
- *       200:
- *         description: Login realizado
- *       401:
- *         description: Credenciais inválidas
- */
-routes.post('/auth/login', userController.loginUser);
-
 /**
  * @openapi
  * /cart/mount:
@@ -182,11 +203,42 @@ routes.post('/cart/finish', authMiddleware, cartController.finish);
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - street
+ *               - number
+ *               - city
+ *               - state
+ *               - zipcode
+ *             properties:
+ *               street:
+ *                 type: string
+ *                 example: Rua das Flores
+ *               number:
+ *                 type: string
+ *                 example: "123"
+ *               complement:
+ *                 type: string
+ *                 example: Apto 45
+ *               city:
+ *                 type: string
+ *                 example: São Paulo
+ *               state:
+ *                 type: string
+ *                 example: SP
+ *               zipcode:
+ *                 type: string
+ *                 example: 01000-000
+ *               country:
+ *                 type: string
+ *                 example: Brasil
  *     responses:
  *       201:
  *         description: Endereço adicionado
  */
-
 routes.post('/me/addresses', authMiddleware, userController.addAddress);
 /**
  * @openapi
@@ -212,6 +264,16 @@ routes.get('/me/addresses', authMiddleware, userController.getAddresses);
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - productId
+ *             properties:
+ *               productId:
+ *                 type: number
+ *                 example: 1
  *     responses:
  *       201:
  *         description: Favorito adicionado
@@ -295,3 +357,14 @@ routes.post('/webhook/stripe', webhookController.stripe);
  *         description: Pedido encontrado
  */
 routes.get('/orders/session', orderController.getOrderBySessionId);
+/** * @openapi
+ * /banners:
+ *   get:
+ *     tags:
+ *       - Banners
+ *     summary: Lista banners
+ *     responses:
+ *       200:
+ *         description: Lista de banners
+ */
+routes.get('/banners', bannerController.getBanners);
