@@ -9,3 +9,4 @@ export const getProductSchema = z.object({
     search: z.string().optional()
 
 });
+

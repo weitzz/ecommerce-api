@@ -16,7 +16,7 @@ export const cartMont: RequestHandler = async (req, res) => {
     const result = cartMountSchema.safeParse(req.body);
     if (!result.success) {
         throw new AppError(
-            "Invalid request body",
+            "Dados inválidos no corpo da requisição",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
             result.error.flatten()
@@ -48,7 +48,7 @@ export const calculateShipping: RequestHandler = async (req, res) => {
     const result = calculateShippingSchema.safeParse(req.query)
     if (!result.success) {
         throw new AppError(
-            "Invalid CEP",
+            "CEP inválido",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
             result.error.flatten()
@@ -71,7 +71,7 @@ export const finish: RequestHandler = async (req, res) => {
 
     if (!userId) {
         throw new AppError(
-            "Access denied",
+            "Acesso negado",
             "UNAUTHORIZED",
             HttpStatus.UNAUTHORIZED,
         )
@@ -80,7 +80,7 @@ export const finish: RequestHandler = async (req, res) => {
     const result = cartFinishSchema.safeParse(req.body)
     if (!result.success) {
         throw new AppError(
-            "Invalid cart",
+            "Carrinho inválido",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
             result.error.flatten()
@@ -93,7 +93,7 @@ export const finish: RequestHandler = async (req, res) => {
     if (!address) {
 
         throw new AppError(
-            "Invalid address",
+            "Endereço inválido",
             "ADDRESS_NOT_FOUND",
             HttpStatus.BAD_REQUEST
         )
@@ -106,14 +106,14 @@ export const finish: RequestHandler = async (req, res) => {
         shippingCost: 7,
         shippingDays: 3
     })
-
     if (!orderId) {
         throw new AppError(
-            "Failed to create order",
+            "Falha ao criar pedido",
             "ORDER_CREATION_FAILED",
             HttpStatus.BAD_REQUEST
         )
     }
+
 
     const url = await createPaymentLinkService({
         cart,
@@ -123,7 +123,7 @@ export const finish: RequestHandler = async (req, res) => {
 
     if (!url) {
         throw new AppError(
-            "Failed to create payment link",
+            "Falha ao criar link de pagamento",
             "PAYMENT_LINK_FAILED",
             HttpStatus.BAD_REQUEST
         )

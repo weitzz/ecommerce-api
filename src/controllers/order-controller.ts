@@ -11,7 +11,7 @@ export const getOrderBySessionId: RequestHandler = async (req, res) => {
     const result = getOrderBySessionIdSchema.safeParse(req.query);
     if (!result.success) {
         throw new AppError(
-            "Session ID invalid",
+            "Sessão ID inválido",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
             result.error.flatten()
@@ -23,7 +23,7 @@ export const getOrderBySessionId: RequestHandler = async (req, res) => {
     const orderId = await getOrderIdFromSessionService(sessionId);
     if (!orderId) {
         throw new AppError(
-            "Order not found",
+            "Pedido não encontrado",
             "ORDER_NOT_FOUND",
             HttpStatus.NOT_FOUND
         )
@@ -37,7 +37,7 @@ export const getOrders: RequestHandler = async (req, res) => {
     const userId = req.user?.id
     if (!userId) {
         throw new AppError(
-            "Access denied",
+            "Acesso negado",
             "UNAUTHORIZED",
             HttpStatus.UNAUTHORIZED
         )
@@ -55,7 +55,7 @@ export const getOrderById: RequestHandler = async (req, res) => {
     const userId = req.user?.id
     if (!userId) {
         throw new AppError(
-            "Access denied",
+            "Acesso negado",
             "UNAUTHORIZED",
             HttpStatus.UNAUTHORIZED
         )
@@ -63,7 +63,7 @@ export const getOrderById: RequestHandler = async (req, res) => {
     const result = getOrderByIdSchema.safeParse(req.params);
     if (!result.success) {
         throw new AppError(
-            "ID invalid",
+            "ID invalido",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
             result.error.flatten()
@@ -75,7 +75,7 @@ export const getOrderById: RequestHandler = async (req, res) => {
     const order = await getOrderByIdService(Number(id), userId);
     if (!order) {
         throw new AppError(
-            "Order not found",
+            "Pedido não encontrado",
             "ORDER_NOT_FOUND",
             HttpStatus.NOT_FOUND
         )

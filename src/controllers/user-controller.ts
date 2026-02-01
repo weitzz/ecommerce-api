@@ -12,7 +12,7 @@ export const registerUser: RequestHandler = async (req, res) => {
 
     if (!resultRegister.success) {
         throw new AppError(
-            "Invalid data for user registration",
+            "Dados inválidos para registro de usuário",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
             resultRegister.error.flatten()
@@ -23,7 +23,7 @@ export const registerUser: RequestHandler = async (req, res) => {
     const user = await createUserService(name, email, password);
     if (!user) {
         throw new AppError(
-            "Email already registered",
+            "Email já cadastrado",
             "EMAIL_ALREADY_REGISTERED",
             HttpStatus.CONFLICT
         );
@@ -38,7 +38,7 @@ export const loginUser: RequestHandler = async (req, res) => {
 
     if (!result.success) {
         throw new AppError(
-            "Invalid data for user login",
+            "Dados inválidos para login",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
             result.error.flatten()
@@ -49,7 +49,7 @@ export const loginUser: RequestHandler = async (req, res) => {
     const token = await loginUserService(email, password);
     if (!token) {
         throw new AppError(
-            "Invalid credentials",
+            "Credenciais inválidas",
             "INVALID_CREDENTIALS",
             HttpStatus.UNAUTHORIZED
         )
@@ -57,13 +57,13 @@ export const loginUser: RequestHandler = async (req, res) => {
 
     return res.status(HttpStatus.OK).json({ success: true, data: { token } });
 }
-
+//usuario nao cadastrado
 
 export const addAddress: RequestHandler = async (req, res) => {
     const userId = req.user?.id
     if (!userId) {
         throw new AppError(
-            "Access denied",
+            "Acesso negado",
             "UNAUTHORIZED",
             HttpStatus.UNAUTHORIZED
         )
@@ -71,7 +71,7 @@ export const addAddress: RequestHandler = async (req, res) => {
     const result = addAddressSchema.safeParse(req.body)
     if (!result.success) {
         throw new AppError(
-            "Invalid data for address",
+            "Dados inválidos para endereço",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
             result.error.flatten()
@@ -82,7 +82,7 @@ export const addAddress: RequestHandler = async (req, res) => {
 
     if (!address) {
         throw new AppError(
-            "Failed to create address",
+            "Erro ao criar endereço",
             "ADDRESS_CREATION_FAILED",
             HttpStatus.BAD_REQUEST,
         );
@@ -98,7 +98,7 @@ export const getAddresses: RequestHandler = async (req, res) => {
 
     if (!userId) {
         throw new AppError(
-            "Access denied",
+            "Acesso negado",
             "UNAUTHORIZED",
             HttpStatus.UNAUTHORIZED
         )

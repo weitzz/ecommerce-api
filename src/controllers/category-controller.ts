@@ -9,7 +9,7 @@ export const getCategoryWithMetadata: RequestHandler = async (req, res) => {
     const category = await getCategoryBySlugService(slug);
     if (!category) {
         throw new AppError(
-            "Category not found",
+            "Categoria não encontrada",
             "CATEGORY_NOT_FOUND",
             HttpStatus.NOT_FOUND
         )

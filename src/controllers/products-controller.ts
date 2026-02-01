@@ -15,7 +15,7 @@ export const getProducts: RequestHandler = async (req, res) => {
 
     if (!parseResult.success) {
         throw new AppError(
-            "Invalid query parameters",
+            "Parâmetros de consulta inválidos",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
             parseResult.error.flatten()
@@ -28,7 +28,7 @@ export const getProducts: RequestHandler = async (req, res) => {
         parsedMetadata = metadata ? JSON.parse(metadata) : undefined;
     } catch {
         throw new AppError(
-            "Invalid metadata format",
+            "Formato de metadados inválido",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST
         );
@@ -60,7 +60,7 @@ export const getProductById: RequestHandler = async (req, res) => {
 
     if (!productId.success) {
         throw new AppError(
-            "Invalid product ID",
+            "ID do produto inválido",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
             productId.error.flatten()
@@ -71,7 +71,7 @@ export const getProductById: RequestHandler = async (req, res) => {
     const product = await getProductByIdService(Number(id));
     if (!product) {
         throw new AppError(
-            "Product not found",
+            "Produto não encontrado",
             "PRODUCT_NOT_FOUND",
             HttpStatus.NOT_FOUND
         )
@@ -103,7 +103,7 @@ export const getRelatedProducts: RequestHandler = async (req, res) => {
 
     if (!productId.success || !queryResult.success) {
         throw new AppError(
-            "Invalid product ID or query parameters",
+            "ID do produto ou parâmetros de consulta inválidos",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
             {

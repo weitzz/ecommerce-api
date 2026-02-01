@@ -6,3 +6,4 @@ export const registerUserSchema = z.object({
     password: z.string({ error: issue => issue.input === undefined ? "Senha é obrigatória, mínimo 6 caracteres" : "Senha inválida" }).min(6, "Senha deve ter no mínimo 6 caracteres"),
 
 });
+

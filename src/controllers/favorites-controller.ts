@@ -8,7 +8,7 @@ export const postFavoriteController: RequestHandler = async (req, res) => {
     const userId = req.user?.id
     if (!userId) {
         throw new AppError(
-            "Access denied",
+            "Acesso negado",
             "UNAUTHORIZED",
             HttpStatus.UNAUTHORIZED
         )
@@ -18,7 +18,7 @@ export const postFavoriteController: RequestHandler = async (req, res) => {
 
     if (!result.success) {
         throw new AppError(
-            "Invalid request body",
+            "Dados inválidos no corpo da requisição",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
             result.error.flatten()
@@ -37,7 +37,7 @@ export const getListFavoritesController: RequestHandler = async (req, res) => {
     const userId = req.user?.id
     if (!userId) {
         throw new AppError(
-            "Access denied",
+            "Acesso negado",
             "UNAUTHORIZED",
             HttpStatus.UNAUTHORIZED
         )
