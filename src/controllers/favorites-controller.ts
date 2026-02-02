@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { favoritesService, listfavoritesByUserService } from '@/services/favorite-service'
+import { toggleFavoriteService, listFavoritesByUserService, removeFavoriteService } from '@/services/favorite-service'
 import { FavoriteSchema } from "@/schemas/favorite-schema";
 import { AppError } from "@/shared/errors/app-error";
 import { HttpStatus } from "@/shared/http/status-codes";
@@ -25,9 +25,11 @@ export const postFavoriteController: RequestHandler = async (req, res) => {
         )
     }
 
-    const favorite = await favoritesService(userId, result.data.productId)
+    const favorite = await toggleFavoriteService(userId, result.data.productId)
 
-    return res.status(HttpStatus.CREATED).json({
+
+
+    return res.status(favorite.favorited ? HttpStatus.CREATED : HttpStatus.OK).json({
         success: true,
         data: favorite
     });
@@ -43,10 +45,41 @@ export const getListFavoritesController: RequestHandler = async (req, res) => {
         )
     }
 
-    const favorites = await listfavoritesByUserService(userId);
+    const favorites = await listFavoritesByUserService(userId);
 
     return res.status(HttpStatus.OK).json({
         success: true,
         data: favorites
     });
 }
+
+
+export const deleteFavoriteController: RequestHandler = async (req, res) => {
+    const userId = req.user?.id;
+    if (!userId) {
+        throw new AppError(
+            "Acesso negado",
+            "UNAUTHORIZED",
+            HttpStatus.UNAUTHORIZED
+        );
+    }
+
+    const result = FavoriteSchema.safeParse(req.params);
+    if (!result.success) {
+        throw new AppError(
+            "Parâmetros inválidos",
+            "VALIDATION_ERROR",
+            HttpStatus.BAD_REQUEST,
+            result.error.flatten()
+        );
+    }
+
+    const { productId } = result.data;
+
+    const removed = await removeFavoriteService(userId, productId);
+
+    return res.status(HttpStatus.OK).json({
+        success: true,
+        data: removed,
+    });
+};

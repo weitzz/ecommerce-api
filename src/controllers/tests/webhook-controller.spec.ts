@@ -32,8 +32,6 @@ describe("POST /webhook/stripe", () => {
             .post("/webhook/stripe")
             .set("stripe-signature", "sig_test")
             .send("raw-body-fake");
-
-        console.log(res.body)
         expect(updateOrderStatusService).toHaveBeenCalledWith(10, "paid");
         expect(res.body).toEqual({ received: true });
     });

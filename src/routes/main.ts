@@ -97,7 +97,6 @@ routes.get('/products', productsController.getProducts);
  *       - Products
  *     summary: Busca produto por ID
  *     parameters:
- *       - in: path
  *         name: id
  *         required: true
  *         schema:
@@ -116,7 +115,6 @@ routes.get('/products/:id', productsController.getProductById);
  *     tags: [Products]
  *     summary: Lista produtos relacionados
  *     parameters:
- *       - in: path
  *         name: id
  *         required: true
  *         schema:
@@ -134,7 +132,6 @@ routes.get('/products/:id/related', productsController.getRelatedProducts);
  *     tags: [Categories]
  *     summary: Metadados da categoria
  *     parameters:
- *       - in: path
  *         name: slug
  *         required: true
  *         schema:
@@ -312,6 +309,9 @@ routes.post('/me/favorites', authMiddleware, favoriteController.postFavoriteCont
  */
 
 routes.get('/me/favorites', authMiddleware, favoriteController.getListFavoritesController);
+
+
+routes.delete('/me/favorites/:productId', authMiddleware, favoriteController.deleteFavoriteController)
 
 /**
  * @openapi
