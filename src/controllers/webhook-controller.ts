@@ -8,7 +8,6 @@ export const stripe: RequestHandler = async (req, res) => {
     const signature = req.headers['stripe-signature'] as string
     const webhookKey = getStripeWebhookSecret()
     const rawBody = req.body
-
     const event = await getConstructEvent(rawBody, signature, webhookKey)
     if (event) {
         const session = event.data.object as Stripe.Checkout.Session

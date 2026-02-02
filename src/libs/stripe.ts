@@ -1,7 +1,7 @@
 import Stripe from 'stripe'
 import { getProductByIdService } from '@/services/products-service';
 import { CreatePaymentParams } from "@/types/payments";
-import { getStripeSecretKey } from '@/utils/get-stripe-sicret-key';
+import { getStripeSecretKey } from '@/utils/get-stripe-secret-key';
 
 import { getFrontEndUrl } from '@/utils/get-front-end-url';
 

@@ -163,18 +163,36 @@ routes.post('/cart/mount', cartController.cartMont);
  * @openapi
  * /cart/shipping:
  *   get:
- *     tags: [Cart]
+ *     tags:
+ *       - Cart
  *     summary: Calcula frete
  *     parameters:
  *       - in: query
- *         name: zipCode
+ *         name: zipcode
+ *         required: true
  *         schema:
  *           type: string
+ *           example: "12345678"
  *     responses:
  *       200:
  *         description: Valor do frete
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     zipcode:
+ *                       type: string
+ *                     shippingCost:
+ *                       type: number
+ *                     shippingDays:
+ *                       type: number
  */
-
 routes.get('/cart/shipping', cartController.calculateShipping);
 
 /**
@@ -318,7 +336,6 @@ routes.get('/orders', authMiddleware, orderController.getOrders);
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - in: path
  *         name: id
  *         required: true
  *         schema:
