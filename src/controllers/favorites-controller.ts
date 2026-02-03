@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import { toggleFavoriteService, listFavoritesByUserService, removeFavoriteService } from '@/services/favorite-service'
-import { FavoriteSchema } from "@/schemas/favorite-schema";
+import { FavoriteSchema, FavoriteParamsSchema } from "@/schemas/favorite-schema";
 import { AppError } from "@/shared/errors/app-error";
 import { HttpStatus } from "@/shared/http/status-codes";
 
@@ -64,7 +64,7 @@ export const deleteFavorite: RequestHandler = async (req, res) => {
         );
     }
 
-    const result = FavoriteSchema.safeParse(req.params);
+    const result = FavoriteParamsSchema.safeParse(req.params);
     if (!result.success) {
         throw new AppError(
             "Parâmetros inválidos",
