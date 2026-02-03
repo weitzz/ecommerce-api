@@ -11,12 +11,11 @@ jest.mock('@/middleware/auth', () => ({
 jest.mock('@/services/user-service', () => ({
     createAddressService: jest.fn(),
     getAddressService: jest.fn(),
+    removeAddressService: jest.fn(),
+    updateAddressService: jest.fn(),
 }))
 import app from '@/app';
 import * as userService from '@/services/user-service';
-
-
-
 
 
 
@@ -159,6 +158,116 @@ describe("UserAddressController", () => {
 
         expect(response.status).toBe(200)
         expect(response.body.data).toEqual([])
+    })
+
+
+
+
+})
+
+describe("Deletar Endereço", () => {
+    afterEach(() => {
+        jest.clearAllMocks()
+    })
+    it('deve remover um endereço do usuário', async () => {
+        jest
+            .spyOn(userService, 'removeAddressService')
+            .mockResolvedValue({ removed: true } as any)
+
+        const response = await request(app)
+            .delete('/me/addresses/1')
+
+        expect(response.status).toBe(204)
+        expect(response.body).toEqual({})
+    })
+
+    it('deve retornar 404 ao tentar remover endereço inexistente', async () => {
+        jest
+            .spyOn(userService, 'removeAddressService')
+            .mockResolvedValue(null as any)
+
+        const response = await request(app)
+            .delete('/me/addresses/1')
+
+        expect(response.status).toBe(404)
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                success: false,
+                error: expect.objectContaining({
+                    code: 'ADDRESS_NOT_FOUND',
+                }),
+            })
+        )
+    })
+    it('deve retornar 400 se o id do endereço for inválido', async () => {
+        const response = await request(app)
+            .delete('/me/addresses/abc')
+
+        expect(response.status).toBe(400)
+        expect(response.body.success).toBe(false)
+    })
+})
+
+describe('Atualizar Endereço', () => {
+    afterEach(() => {
+        jest.clearAllMocks()
+    })
+    it('deve atualizar um endereço do usuário', async () => {
+        jest
+            .spyOn(userService, 'updateAddressService')
+            .mockResolvedValue(makeAddress() as any)
+
+        const response = await request(app)
+            .put('/me/addresses/1')
+            .send({
+                zipcode: "12345678",
+                street: "Rua A",
+                number: "123",
+                city: "São Paulo",
+                state: "SP",
+                country: "Brasil",
+            })
+
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                success: true,
+                data: expect.objectContaining({
+                    id: 1,
+                    street: "Rua A",
+                }),
+            })
+        )
+    })
+
+    it('deve retornar 404 ao tentar atualizar endereço inexistente', async () => {
+        jest
+            .spyOn(userService, 'updateAddressService')
+            .mockResolvedValue(null as any)
+
+        const response = await request(app)
+            .put('/me/addresses/1')
+            .send({
+                zipcode: "12345678",
+                street: "Rua A",
+                number: "123",
+                city: "São Paulo",
+                state: "SP",
+                country: "Brasil",
+            })
+
+        expect(response.status).toBe(404)
+        expect(response.body.error.code).toBe('ADDRESS_NOT_FOUND')
+    })
+    it('não deve atualizar endereço com dados inválidos', async () => {
+        const response = await request(app)
+            .put('/me/addresses/1')
+            .send({
+                street: "Rua A",
+            })
+
+        expect(response.status).toBe(400)
+        expect(response.body.error.code).toBe('VALIDATION_ERROR')
     })
 
 

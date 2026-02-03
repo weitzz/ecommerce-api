@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">56.25% </span>
+                <span class="strong">31.25% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>18/32</span>
+                <span class='fraction'>10/32</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/12</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.72% </span>
+                <span class="strong">24.13% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/29</span>
+                <span class='fraction'>7/29</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -205,8 +205,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -214,9 +214,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -224,11 +224,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -289,9 +289,9 @@ export const getListFavorites: RequestHandler = <span class="fstat-no" title="fu
 }
 &nbsp;
 &nbsp;
-export const deleteFavorite: RequestHandler = async (req, res) =&gt; {
-    const userId = req.user?.id;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!userId) {
+export const deleteFavorite: RequestHandler = <span class="fstat-no" title="function not covered" >async </span>(req, res) =&gt; {
+    const userId = <span class="cstat-no" title="statement not covered" >req.user?.id;</span>
+<span class="cstat-no" title="statement not covered" >    if (!userId) {</span>
 <span class="cstat-no" title="statement not covered" >        throw new AppError(</span>
             "Acesso negado",
             "UNAUTHORIZED",
@@ -299,9 +299,9 @@ export const deleteFavorite: RequestHandler = async (req, res) =&gt; {
         );
     }
 &nbsp;
-    const result = FavoriteParamsSchema.safeParse(req.params);
-    if (!result.success) {
-        throw new AppError(
+    const result = <span class="cstat-no" title="statement not covered" >FavoriteParamsSchema.safeParse(req.params);</span>
+<span class="cstat-no" title="statement not covered" >    if (!result.success) {</span>
+<span class="cstat-no" title="statement not covered" >        throw new AppError(</span>
             "Parâmetros inválidos",
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
@@ -309,11 +309,11 @@ export const deleteFavorite: RequestHandler = async (req, res) =&gt; {
         );
     }
 &nbsp;
-    const { productId } = result.data;
+    const { productId } = <span class="cstat-no" title="statement not covered" >result.data;</span>
 &nbsp;
-    const removed = await removeFavoriteService(userId, productId);
+    const removed = <span class="cstat-no" title="statement not covered" >await removeFavoriteService(userId, productId);</span>
 &nbsp;
-    return res.status(HttpStatus.OK).json({
+<span class="cstat-no" title="statement not covered" >    return res.status(HttpStatus.OK).json({</span>
         success: true,
         data: removed,
     });
@@ -325,7 +325,7 @@ export const deleteFavorite: RequestHandler = async (req, res) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-02-03T17:07:35.297Z
+                at 2026-02-03T17:16:18.241Z
             </div>
         <script src="../prettify.js"></script>
         <script>
