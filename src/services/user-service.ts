@@ -96,3 +96,60 @@ export const getAddressByIdService = async (userId: number, addressId: number) =
     })
 
 }
+
+export const removeAddressService = async (userId: number, addressId: number) => {
+    const address = await prisma.userAddress.findFirst({
+        where: {
+            id: addressId, userId
+        },
+    });
+
+    if (!address) {
+        return null;
+    }
+
+    if (address.userId !== userId) {
+        return null
+    }
+
+
+    await prisma.userAddress.delete({
+        where: {
+            id: addressId
+        },
+    });
+
+    return null
+
+}
+
+export const updateAddressService = async (userId: number, addressId: number, input: Address) => {
+    const address = await prisma.userAddress.findFirst({
+        where: {
+            id: addressId, userId
+        },
+    });
+
+    if (!address) {
+        return null
+    }
+    const data = {
+        zipcode: input.zipcode.trim(),
+        street: input.street.trim(),
+        number: input.number.trim(),
+        city: input.city.trim(),
+        state: input.state.trim(),
+        country: input.country.trim(),
+        complement: input.complement?.trim() || null,
+    };
+
+    const updateAddress = await prisma.userAddress.update({
+        where: {
+            id: addressId
+        },
+        data
+    });
+
+    return { address: updateAddress };
+
+}

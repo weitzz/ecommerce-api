@@ -5,6 +5,8 @@ import {
     createAddressService,
     getAddressService,
     getAddressByIdService,
+    updateAddressService,
+    removeAddressService,
 } from "@/services/user-service";
 import { compare, hash } from "bcryptjs";
 import jwt from "jsonwebtoken"
@@ -21,6 +23,8 @@ jest.mock("@/libs/prisma", () => ({
             create: jest.fn(),
             findMany: jest.fn(),
             findFirst: jest.fn(),
+            delete: jest.fn(),
+            update: jest.fn(),
         },
     },
 }));
@@ -184,6 +188,72 @@ describe("User Service", () => {
             (prisma.userAddress.findFirst as jest.Mock).mockResolvedValue(null);
 
             const result = await getAddressByIdService(1, 999);
+
+            expect(result).toBeNull();
+        });
+    });
+
+
+    describe("updateAddressService", () => {
+        it("deve atualizar endereço do usuário", async () => {
+            const updatedAddress = {
+                id: 1,
+                zipcode: "98765-432",
+                street: "Rua B",
+                number: "200",
+                city: "Outra Cidade",
+                state: "OS",
+                country: "Brasil",
+                complement: "Casa",
+                userId: 1,
+            };
+
+            (prisma.userAddress.findFirst as jest.Mock).mockResolvedValue({ id: 1, userId: 1 });
+            (prisma.userAddress.update as jest.Mock).mockResolvedValue(updatedAddress);
+
+            const result = await updateAddressService(1, 1, {
+                zipcode: "98765-432",
+                street: "Rua B",
+                number: "200",
+                city: "Outra Cidade",
+                state: "OS",
+                country: "Brasil",
+                complement: "Casa",
+            });
+            expect(result).toEqual({ address: updatedAddress });
+        });
+
+        it("deve retornar null se endereço não existir", async () => {
+            (prisma.userAddress.findFirst as jest.Mock).mockResolvedValue(null);
+
+            const result = await updateAddressService(1, 999, {
+                zipcode: "98765-432",
+                street: "Rua B",
+                number: "200",
+                city: "Outra Cidade",
+                state: "OS",
+                country: "Brasil",
+                complement: "Casa",
+            });
+
+            expect(result).toBeNull();
+        });
+    });
+
+    describe("deleteAddressService", () => {
+        it("deve deletar endereço do usuário", async () => {
+            (prisma.userAddress.findFirst as jest.Mock).mockResolvedValue({ id: 1, userId: 1 });
+            (prisma.userAddress.delete as jest.Mock).mockResolvedValue({ id: 1, userId: 1 });
+
+            const result = await removeAddressService(1, 1);
+
+            expect(result).toBeNull();
+        });
+
+        it("deve retornar null se endereço não existir", async () => {
+            (prisma.userAddress.findFirst as jest.Mock).mockResolvedValue(null);
+
+            const result = await removeAddressService(1, 999);
 
             expect(result).toBeNull();
         });

@@ -4,7 +4,7 @@ import { FavoriteSchema } from "@/schemas/favorite-schema";
 import { AppError } from "@/shared/errors/app-error";
 import { HttpStatus } from "@/shared/http/status-codes";
 
-export const postFavoriteController: RequestHandler = async (req, res) => {
+export const postFavorite: RequestHandler = async (req, res) => {
     const userId = req.user?.id
     if (!userId) {
         throw new AppError(
@@ -35,7 +35,7 @@ export const postFavoriteController: RequestHandler = async (req, res) => {
     });
 }
 
-export const getListFavoritesController: RequestHandler = async (req, res) => {
+export const getListFavorites: RequestHandler = async (req, res) => {
     const userId = req.user?.id
     if (!userId) {
         throw new AppError(
@@ -54,7 +54,7 @@ export const getListFavoritesController: RequestHandler = async (req, res) => {
 }
 
 
-export const deleteFavoriteController: RequestHandler = async (req, res) => {
+export const deleteFavorite: RequestHandler = async (req, res) => {
     const userId = req.user?.id;
     if (!userId) {
         throw new AppError(

@@ -269,6 +269,9 @@ routes.post('/me/addresses', authMiddleware, userController.addAddress);
  *         description: Lista de endereços
  */
 routes.get('/me/addresses', authMiddleware, userController.getAddresses);
+
+routes.delete('/me/addresses/:id', authMiddleware, userController.deleteAddress);
+routes.put('/me/addresses/:id', authMiddleware, userController.updateAddress);
 /**
  * @openapi
  * /me/favorites:
@@ -294,7 +297,7 @@ routes.get('/me/addresses', authMiddleware, userController.getAddresses);
  *         description: Favorito adicionado
  */
 
-routes.post('/me/favorites', authMiddleware, favoriteController.postFavoriteController);
+routes.post('/me/favorites', authMiddleware, favoriteController.postFavorite);
 /**
  * @openapi
  * /me/favorites:
@@ -308,10 +311,10 @@ routes.post('/me/favorites', authMiddleware, favoriteController.postFavoriteCont
  *         description: Lista de favoritos
  */
 
-routes.get('/me/favorites', authMiddleware, favoriteController.getListFavoritesController);
+routes.get('/me/favorites', authMiddleware, favoriteController.getListFavorites);
 
 
-routes.delete('/me/favorites/:productId', authMiddleware, favoriteController.deleteFavoriteController)
+routes.delete('/me/favorites/:productId', authMiddleware, favoriteController.deleteFavorite)
 
 /**
  * @openapi
