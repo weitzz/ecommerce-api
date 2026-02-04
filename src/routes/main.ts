@@ -125,22 +125,7 @@ routes.get('/products/:id', productsController.getProductById);
  */
 
 routes.get('/products/:id/related', productsController.getRelatedProducts);
-/**
- * @openapi
- * /categories/{slug}/metadata:
- *   get:
- *     tags: [Categories]
- *     summary: Metadados da categoria
- *     parameters:
- *         name: slug
- *         required: true
- *         schema:
- *           type: string
- *          example: camisas
- *     responses:
- *       200:
- *         description: Metadados da categoria
- */
+
 routes.get('/categories/:slug/metadata', categoryController.getCategoryWithMetadata);
 /**
  * @openapi

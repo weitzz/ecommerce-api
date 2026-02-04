@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import jwt from "jsonwebtoken"
+import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken"
 import { JwtPayload } from "../types/jwt-payload"
 import { AppError } from "@/shared/errors/app-error"
 import { HttpStatus } from "@/shared/http/status-codes"
@@ -9,7 +9,7 @@ export const authMiddleware = async (request: Request, response: Response, next:
     const authHeader = request.headers.authorization
     if (!authHeader) {
         throw new AppError(
-            "Token não fornecido",
+            "Usuário não autenticado",
             "AUTH_TOKEN_MISSING",
             HttpStatus.UNAUTHORIZED
         )
@@ -34,9 +34,24 @@ export const authMiddleware = async (request: Request, response: Response, next:
         request.user = decoded
         next()
     } catch (err) {
+        if (err instanceof TokenExpiredError) {
+            throw new AppError(
+                "Token expirado",
+                "AUTH_TOKEN_EXPIRED",
+                HttpStatus.UNAUTHORIZED
+            )
+        }
+        if (err instanceof JsonWebTokenError) {
+            throw new AppError(
+                "Token inválido",
+                "AUTH_TOKEN_INVALID",
+                HttpStatus.UNAUTHORIZED
+            )
+        }
+
         throw new AppError(
-            "Token inválido ou expirado",
-            "AUTH_TOKEN_INVALID",
+            "Erro de autenticação",
+            "AUTH_UNKNOWN_ERROR",
             HttpStatus.UNAUTHORIZED
         )
     }
