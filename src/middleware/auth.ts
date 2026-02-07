@@ -4,10 +4,8 @@ import { JwtPayload } from "../types/jwt-payload"
 import { AppError } from "@/shared/errors/app-error"
 import { HttpStatus } from "@/shared/http/status-codes"
 
-export const authMiddleware = async (request: Request, response: Response, next: NextFunction) => {
-
-    const authHeader = request.headers.authorization
-    if (!authHeader) {
+const getToken = (authorization?: string) => {
+    if (!authorization) {
         throw new AppError(
             "Usuário não autenticado",
             "AUTH_TOKEN_MISSING",
@@ -15,7 +13,7 @@ export const authMiddleware = async (request: Request, response: Response, next:
         )
     }
 
-    const [type, token] = authHeader.split(" ")
+    const [type, token] = authorization.split(" ")
 
     if (type !== "Bearer" || !token) {
         throw new AppError(
@@ -25,23 +23,25 @@ export const authMiddleware = async (request: Request, response: Response, next:
         )
     }
 
-    try {
-        const decoded = jwt.verify(
-            token,
-            process.env.JWT_SECRET!
-        ) as JwtPayload
+    return token
+}
 
-        request.user = decoded
-        next()
-    } catch (err) {
-        if (err instanceof TokenExpiredError) {
+const verifyAccessToken = (token: string) => {
+    try {
+        return jwt.verify(
+            token,
+            process.env.ACCESS_TOKEN_SECRET!
+        )
+
+    } catch (error) {
+        if (error instanceof TokenExpiredError) {
             throw new AppError(
                 "Token expirado",
                 "AUTH_TOKEN_EXPIRED",
                 HttpStatus.UNAUTHORIZED
             )
         }
-        if (err instanceof JsonWebTokenError) {
+        if (error instanceof JsonWebTokenError) {
             throw new AppError(
                 "Token inválido",
                 "AUTH_TOKEN_INVALID",
@@ -49,11 +49,25 @@ export const authMiddleware = async (request: Request, response: Response, next:
             )
         }
 
+        throw error
+    }
+}
+
+export const authMiddleware = async (request: Request, response: Response, next: NextFunction) => {
+    const token = getToken(request.headers.authorization)
+    const decoded = verifyAccessToken(token)
+    const userId = Number(decoded.sub)
+
+    if (!userId) {
         throw new AppError(
-            "Erro de autenticação",
-            "AUTH_UNKNOWN_ERROR",
+            "Token inválido",
+            "AUTH_TOKEN_INVALID",
             HttpStatus.UNAUTHORIZED
         )
     }
 
+    request.user = {
+        id: userId
+    }
+    return next()
 }

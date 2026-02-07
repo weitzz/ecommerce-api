@@ -1,5 +1,6 @@
 import { Product } from "@/types/product";
 import { prisma } from "../libs/prisma";
+import { FavoriteProduct } from "@/types/favorite-product";
 
 
 export const toggleFavoriteService = async (
@@ -40,16 +41,34 @@ export const toggleFavoriteService = async (
     };
 };
 
-export const listFavoritesByUserService = async (userId: number): Promise<Product[]> => {
+export const listFavoritesByUserService = async (userId: number): Promise<FavoriteProduct[]> => {
     const favorites = await prisma.favorites.findMany({
         where: { userId },
         orderBy: { createdAt: 'desc' },
-        select: {
-            product: true
+        include: {
+            product: {
+                include: {
+                    images: {
+                        take: 1,
+                        orderBy: { createdAt: 'asc' }
+                    }
+                }
+            }
         }
     });
 
-    return favorites.map(f => f.product);
+    return favorites.map(favorite => {
+        const product = favorite.product
+        return {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.images[0]
+                ? `media/products/${product.images[0].imageUrl}`
+                : null,
+            liked: true
+        }
+    });
 }
 
 export const removeFavoriteService = async (userId: number, productId: number) => {

@@ -1,6 +1,7 @@
 import { prisma } from "../libs/prisma"
 import { Address } from "@/types/address"
 import { compare, hash } from "bcryptjs"
+import { randomBytes } from "crypto"
 import jwt from "jsonwebtoken"
 
 
@@ -33,17 +34,50 @@ export const loginUserService = async (email: string, password: string) => {
 
     const validPassword = await compare(password, user.password)
     if (!validPassword) return null
-    const token = jwt.sign(
-        {
-            id: user.id, email: user.email
-        },
-        process.env.JWT_SECRET!,
-        { expiresIn: "3d" }
+
+    const accessToken = jwt.sign(
+        { sub: user.id },
+        process.env.ACCESS_TOKEN_SECRET!,
+        { expiresIn: "15m" }
     )
-    return token
+
+    const refreshToken = randomBytes(64).toString("hex")
+    const refreshTokenHash = await hash(refreshToken, 10)
+
+    const expiresAt = new Date()
+    expiresAt.setDate(expiresAt.getDate() + 7)
+
+    await prisma.refreshToken.create({
+        data: {
+            tokenHash: refreshTokenHash,
+            userId: user.id,
+            expiresAt
+        }
+    })
+
+    return {
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+        },
+        accessToken,
+        refreshToken
+    }
 }
 
+export const getMeService = async (userId: number) => {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            id: true,
+            name: true,
+            email: true
+        }
+    })
 
+    return user
+}
 
 export const createAddressService = async (userId: number, input: Address) => {
     const data = {
@@ -106,10 +140,6 @@ export const removeAddressService = async (userId: number, addressId: number) =>
 
     if (!address) {
         return null;
-    }
-
-    if (address.userId !== userId) {
-        return null
     }
 
 

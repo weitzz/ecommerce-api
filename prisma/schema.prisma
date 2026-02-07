@@ -19,24 +19,38 @@ model User {
   name      String
   email     String   @unique
   password  String
-  token     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  userAddress UserAddress[]
-  orders      Order[]
-  favorites   Favorites[]
-  otps        Otp[]
+  userAddress   UserAddress[]
+  orders        Order[]
+  favorites     Favorites[]
+  otps          OTP[]
+  refreshTokens RefreshToken[]
 }
 
-model Otp {
-  id        String   @id
-  code      String
+model OTP {
+  id        Int      @id @default(autoincrement())
+  token     String
   userId    Int
   expiresAt DateTime
-  used      Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  tokenHash String
+  userId    Int
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([tokenHash])
 }
 
 model UserAddress {

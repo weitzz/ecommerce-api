@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import { registerUserSchema } from "@/schemas/register-user-schema";
-import { createAddressService, createUserService, getAddressByIdService, getAddressService, loginUserService, removeAddressService, updateAddressService } from "@/services/user-service";
+import { createAddressService, createUserService, getAddressService, getMeService, loginUserService, removeAddressService, updateAddressService } from "@/services/user-service";
 import { loginUserSchema } from "@/schemas/login-user-schema";
 import { addAddressSchema } from "@/schemas/add-address-schema";
 import { AppError } from "@/shared/errors/app-error";
@@ -39,18 +39,46 @@ export const loginUser: RequestHandler = async (req, res) => {
     );
 
 
-    const token = await loginUserService(email, password);
-    if (!token) {
+    const result = await loginUserService(email, password);
+    if (!result) {
         throw new AppError(
             "Credenciais inválidas",
             "INVALID_CREDENTIALS",
             HttpStatus.UNAUTHORIZED
         )
     }
+    res.cookie("refreshToken", result.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        path: "/auth/refresh"
+    })
 
-    return res.status(HttpStatus.OK).json({ success: true, data: { token } });
+    return res.status(HttpStatus.OK).json({
+        success: true, data: {
+            user: result.user,
+            accessToken: result.accessToken
+        }
+    });
 }
 
+export const profile: RequestHandler = async (req, res) => {
+    const { id: userId } = getAuthenticatedUser(req)
+    const user = await getMeService(userId)
+
+    if (!user) {
+        throw new AppError(
+            "Usuário não encontrado",
+            "USER_NOT_FOUND",
+            HttpStatus.NOT_FOUND
+        )
+    }
+
+    return res.status(HttpStatus.OK).json({
+        success: true,
+        data: user
+    })
+}
 
 export const addAddress: RequestHandler = async (req, res) => {
     const { id: userId } = getAuthenticatedUser(req);

@@ -8,6 +8,7 @@ export const HttpStatus = {
     CONFLICT: 409,
     INTERNAL_SERVER_ERROR: 500,
     NO_CONTENT: 204,
+    TOO_MANY_REQUESTS: 429
 } as const
 
 export type HttpStatusCode = typeof HttpStatus[keyof typeof HttpStatus]
