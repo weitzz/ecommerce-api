@@ -74,12 +74,14 @@ describe("UserAddressController", () => {
                 street: 'Rua A',
             })
         expect(response.status).toBe(400)
+        console.log(response.body)
         expect(response.body).toEqual(
             expect.objectContaining({
                 success: false,
                 error: expect.objectContaining({
-                    message: 'Invalid data for address',
+                    message: 'Dados inválidos para endereço',
                     code: 'VALIDATION_ERROR',
+
                 }),
             })
         )
@@ -105,7 +107,7 @@ describe("UserAddressController", () => {
             expect.objectContaining({
                 success: false,
                 error: expect.objectContaining({
-                    message: 'Failed to create address',
+                    message: 'Erro ao criar endereço',
                     code: 'ADDRESS_CREATION_FAILED',
                 }),
             })

@@ -25,22 +25,12 @@ model User {
   userAddress   UserAddress[]
   orders        Order[]
   favorites     Favorites[]
-  otps          OTP[]
   refreshTokens RefreshToken[]
-}
-
-model OTP {
-  id        Int      @id @default(autoincrement())
-  token     String
-  userId    Int
-  expiresAt DateTime
-  user      User     @relation(fields: [userId], references: [id])
-
-  @@index([userId])
 }
 
 model RefreshToken {
   id        Int      @id @default(autoincrement())
+  jti       String   @unique
   tokenHash String
   userId    Int
   expiresAt DateTime
@@ -49,8 +39,7 @@ model RefreshToken {
 
   user User @relation(fields: [userId], references: [id])
 
-  @@index([userId])
-  @@index([tokenHash])
+  @@index([userId, revoked])
 }
 
 model UserAddress {

@@ -73,21 +73,23 @@ describe("toggleFavoriteService", () => {
 describe("listFavoritesByUserService", () => {
     it("deve listar favoritos do usuário", async () => {
         const mockFavorites = [
-            { product: { id: 1, name: "Produto A" } },
-            { product: { id: 2, name: "Produto B" } },
+            { product: { id: 1, name: "Produto A", price: 123, liked: true, images: [{ imageUrl: "teste.png" }], } },
+            { product: { id: 2, name: "Produto B", price: 123, liked: true, images: [{ imageUrl: "teste.png" }], } },
         ];
         (prisma.favorites.findMany as jest.Mock).mockResolvedValue(mockFavorites);
 
         const result = await listFavoritesByUserService(1);
 
-        expect(prisma.favorites.findMany).toHaveBeenCalledWith({
-            where: { userId: 1 }, orderBy: { createdAt: "desc" },
-            select: { product: true },
-        });
+        expect(prisma.favorites.findMany).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: { userId: 1 },
+                orderBy: { createdAt: "desc" },
+            })
+        );
 
         expect(result).toEqual([
-            { id: 1, name: "Produto A" },
-            { id: 2, name: "Produto B" },
+            { id: 1, name: "Produto A", price: 123, liked: true, image: "media/products/teste.png", },
+            { id: 2, name: "Produto B", price: 123, liked: true, image: "media/products/teste.png", },
         ]);
     });
 

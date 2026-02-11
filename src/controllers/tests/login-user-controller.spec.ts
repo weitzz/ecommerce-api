@@ -17,7 +17,15 @@ describe("LoginUserController", () => {
         jest.clearAllMocks()
     })
     it('Deve logar um usuário com sucesso', async () => {
-        jest.spyOn(loginService, 'loginUserService').mockResolvedValueOnce("valid_token")
+        jest.spyOn(loginService, 'loginUserService').mockResolvedValueOnce({
+            user: {
+                id: 1,
+                name: "Test User",
+                email: "email@email.com",
+            },
+            accessToken: "access-token",
+            refreshToken: "refresh-token",
+        })
 
         const response = await request(app).post('/auth/login').send({
             email: "email@email.com",
@@ -27,11 +35,20 @@ describe("LoginUserController", () => {
         expect(response.body).toEqual(
             expect.objectContaining({
                 success: true,
-                data: expect.objectContaining({
-                    token: 'valid_token',
-                })
+                data: {
+                    user: {
+                        id: 1,
+                        name: "Test User",
+                        email: "email@email.com",
+                    },
+                    accessToken: "access-token",
+                }
             })
         )
+        const cookies = response.headers["set-cookie"]
+        expect(cookies).toBeDefined()
+        expect(cookies[0]).toContain("refreshToken=")
+        expect(cookies[0]).toContain("HttpOnly")
     });
     it('Não deve permitir login com body inválido', async () => {
         const response = await request(app).post('/auth/login').send({

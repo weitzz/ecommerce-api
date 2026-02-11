@@ -51,7 +51,8 @@ export const loginUser: RequestHandler = async (req, res) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        path: "/auth/refresh"
+        path: "/auth/refresh",
+        maxAge: 1000 * 60 * 60 * 24 * 7
     })
 
     return res.status(HttpStatus.OK).json({

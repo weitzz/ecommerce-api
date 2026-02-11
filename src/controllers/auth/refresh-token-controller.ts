@@ -5,7 +5,7 @@ import { HttpStatus } from "@/shared/http/status-codes"
 
 export const refreshTokenController: RequestHandler = async (req, res) => {
     const refreshToken = req.cookies?.refreshToken
-
+    console.log("cookies:", req.cookies)
     if (!refreshToken) {
         throw new AppError(
             "Refresh token ausente",
@@ -21,16 +21,8 @@ export const refreshTokenController: RequestHandler = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
-            path: "/",
-            maxAge: 60 * 15
-        })
-
-        res.cookie("refreshToken", result.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
             path: "/auth/refresh",
-            maxAge: 60 * 60 * 24 * 7
+            maxAge: 1000 * 60 * 60 * 24 * 7,
         })
 
         return res.status(HttpStatus.OK).json({

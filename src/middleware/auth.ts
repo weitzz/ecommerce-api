@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express"
 import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken"
-import { JwtPayload } from "../types/jwt-payload"
 import { AppError } from "@/shared/errors/app-error"
 import { HttpStatus } from "@/shared/http/status-codes"
 

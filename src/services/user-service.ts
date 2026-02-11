@@ -35,13 +35,22 @@ export const loginUserService = async (email: string, password: string) => {
     const validPassword = await compare(password, user.password)
     if (!validPassword) return null
 
+
     const accessToken = jwt.sign(
-        { sub: user.id },
+        { sub: String(user.id) },
         process.env.ACCESS_TOKEN_SECRET!,
         { expiresIn: "15m" }
     )
 
-    const refreshToken = randomBytes(64).toString("hex")
+    const jti = randomBytes(16).toString("hex")
+    const refreshToken = jwt.sign(
+        {
+            sub: String(user.id),
+            jti,
+        },
+        process.env.REFRESH_TOKEN_SECRET!,
+        { expiresIn: "7d" }
+    )
     const refreshTokenHash = await hash(refreshToken, 10)
 
     const expiresAt = new Date()
@@ -49,9 +58,12 @@ export const loginUserService = async (email: string, password: string) => {
 
     await prisma.refreshToken.create({
         data: {
+            jti,
             tokenHash: refreshTokenHash,
-            userId: user.id,
-            expiresAt
+            expiresAt,
+            user: {
+                connect: { id: user.id }
+            }
         }
     })
 

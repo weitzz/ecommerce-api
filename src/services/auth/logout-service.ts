@@ -1,24 +1,32 @@
 import { prisma } from "@/libs/prisma"
-import { compare } from "bcryptjs"
+import jwt from "jsonwebtoken"
+import { RefreshTokenPayload } from "@/types/jwt-payload"
 
 export const logoutService = async (refreshToken: string) => {
-    const storedTokens = await prisma.refreshToken.findMany({
-        where: {
-            revoked: false,
-            expiresAt: { gt: new Date() },
-        },
-    })
+    let payload: RefreshTokenPayload
+    try {
+        const decoded = jwt.verify(
+            refreshToken,
+            process.env.REFRESH_TOKEN_SECRET!
+        )
 
-    for (const token of storedTokens) {
-        const isMatch = await compare(refreshToken, token.tokenHash)
-
-        if (isMatch) {
-            await prisma.refreshToken.update({
-                where: { id: token.id },
-                data: { revoked: true },
-            })
+        if (
+            typeof decoded !== "object" ||
+            !("jti" in decoded)
+        ) {
             return
         }
+
+        payload = decoded as RefreshTokenPayload
+    } catch {
+        return
     }
 
+    await prisma.refreshToken.updateMany({
+        where: {
+            jti: payload.jti,
+            revoked: false,
+        },
+        data: { revoked: true },
+    })
 }

@@ -5,7 +5,7 @@ import { errorHandler } from "./shared/errors/error-handler";
 import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
 import { swaggerConfig } from './docs/swagger'
-import { startRefreshTokenCleanupJob } from "./infra/refresh-token-cleanup.job";
+
 
 const app = express();
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig))
@@ -16,6 +16,6 @@ app.use(express.static("public"));
 app.use(cookieParser())
 app.use(routes);
 app.use(errorHandler);
-startRefreshTokenCleanupJob()
+
 
 export default app;

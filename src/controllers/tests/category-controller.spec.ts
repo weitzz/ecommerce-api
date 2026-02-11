@@ -62,12 +62,13 @@ describe('CategoryController', () => {
 
         const response = await request(app)
             .get('/categories/categoria-inexistente/metadata')
+
         expect(response.status).toBe(404)
         expect(response.body).toMatchObject({
             success: false,
             error: {
                 code: 'CATEGORY_NOT_FOUND',
-                message: 'Category not found',
+                message: 'Categoria não encontrada',
             },
         })
     })

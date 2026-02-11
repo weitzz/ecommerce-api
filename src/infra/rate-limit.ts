@@ -15,12 +15,12 @@ export const createRateLimiter = (
         standardHeaders: true,
         legacyHeaders: false,
         keyGenerator,
-        handler: () => {
-            throw new AppError(
-                "Muitas requisições. Tente novamente mais tarde.",
-                "RATE_LIMIT_EXCEEDED",
-                HttpStatus.TOO_MANY_REQUESTS
-            )
+        handler: (req, res) => {
+            res.status(HttpStatus.TOO_MANY_REQUESTS).json({
+                success: false,
+                code: "RATE_LIMIT_EXCEEDED",
+                message: "Muitas requisições. Tente novamente mais tarde."
+            })
         },
     })
 }
