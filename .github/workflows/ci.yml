@@ -28,8 +28,11 @@ jobs:
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testing
       JWT_SECRET: testsecret
-      REFRESH_SECRET: testrefresh
+      ACCESS_TOKEN_SECRET: test_access_secret
+      REFRESH_TOKEN_SECRET: testrefresh
       STRIPE_SECRET_KEY: sk_test_dummy
+      STRIPE_WEBHOOK_KEY: sk_test_webhook
+      BASE_URL: http://localhost:4000
 
     steps:
       - uses: actions/checkout@v4
