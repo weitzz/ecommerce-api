@@ -43,7 +43,7 @@ src/
  ├── schemas/
  ├── middlewares/
  ├── shared/
- |── server.ts
+ ├── server.ts
  └── app.ts
 
 
@@ -139,7 +139,8 @@ http://localhost:4000
 ✔️ Validação de dados com Zod  
 ✔️ Testes unitários (services e controllers)  
 ✔️ Documentação com Swagger
-🔄 Refresh token  
+✔️ Refresh token
+✔️ Rate limit
 🔄 Testes de integração (planejado)  
 🔄 Deploy em ambiente produtivo (planejado)
 
