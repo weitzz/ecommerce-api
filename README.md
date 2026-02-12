@@ -72,6 +72,11 @@ STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxx
 STRIPE_WEBHOOK_KEY=whsec_xxxxxxxxxxxxx
 FRONT_END_URL=http://localhost:3000
 
+Gerar as chaves:
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+ACCESS_TOKEN_SECRET=
+REFRESH_TOKEN_SECRET=
+
 ```
 
 ## 🐳 Executando o banco de dados com Docker
