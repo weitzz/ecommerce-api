@@ -167,9 +167,7 @@ describe("UserAddressController", () => {
 })
 
 describe("Deletar Endereço", () => {
-    afterEach(() => {
-        jest.clearAllMocks()
-    })
+
     it('deve remover um endereço do usuário', async () => {
         jest
             .spyOn(userService, 'removeAddressService')
@@ -210,9 +208,6 @@ describe("Deletar Endereço", () => {
 })
 
 describe('Atualizar Endereço', () => {
-    afterEach(() => {
-        jest.clearAllMocks()
-    })
     it('deve atualizar um endereço do usuário', async () => {
         jest
             .spyOn(userService, 'updateAddressService')
