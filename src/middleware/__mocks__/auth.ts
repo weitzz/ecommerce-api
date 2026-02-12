@@ -5,6 +5,6 @@ export const authMiddleware = (
     res: Response,
     next: NextFunction
 ) => {
-    req.user = { id: 1, email: 'test@example.com' }
+    req.user = { id: 1 }
     next()
 }
