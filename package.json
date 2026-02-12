@@ -5,6 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch --env-file=.env src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "postinstall": "prisma generate",
+    "railway:deploy": "prisma migrate deploy",
     "test": "jest --runInBand --detectOpenHandles --config ./jest.config.ts",
     "pretest:int": "docker run --name db_testing -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=testing -p 5433:5432 -d postgres && npx wait-on tcp:5433",
     "db:migrate:test": "npx dotenv-cli -e .env.test -- prisma migrate deploy",
