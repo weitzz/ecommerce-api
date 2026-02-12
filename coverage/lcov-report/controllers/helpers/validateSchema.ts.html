@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>0/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>0/7</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -86,40 +86,40 @@
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
 <a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ZodSchema } from "zod";
-import { AppError } from "@/shared/errors/app-error";
-import { HttpStatus } from "@/shared/http/status-codes";
+<span class="cstat-no" title="statement not covered" >import { AppError } from "@/shared/errors/app-error";</span>
+<span class="cstat-no" title="statement not covered" >import { HttpStatus } from "@/shared/http/status-codes";</span>
 &nbsp;
-export function validateSchema&lt;T&gt;(
+<span class="cstat-no" title="statement not covered" >export function <span class="fstat-no" title="function not covered" >v</span>alidateSchema&lt;</span>T&gt;(
     schema: ZodSchema&lt;T&gt;,
     data: unknown,
     message = <span class="branch-0 cbranch-no" title="branch not covered" >"Dados inválidos"</span>
 ): T {
-    const result = schema.safeParse(data);
+    const result = <span class="cstat-no" title="statement not covered" >schema.safeParse(data);</span>
 &nbsp;
-    if (!result.success) {
-        throw new AppError(
+<span class="cstat-no" title="statement not covered" >    if (!result.success) {</span>
+<span class="cstat-no" title="statement not covered" >        throw new AppError(</span>
             message,
             "VALIDATION_ERROR",
             HttpStatus.BAD_REQUEST,
@@ -127,7 +127,7 @@ export function validateSchema&lt;T&gt;(
         );
     }
 &nbsp;
-    return result.data;
+<span class="cstat-no" title="statement not covered" >    return result.data;</span>
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -136,7 +136,7 @@ export function validateSchema&lt;T&gt;(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-02-11T16:04:39.795Z
+                at 2026-02-12T16:06:05.819Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

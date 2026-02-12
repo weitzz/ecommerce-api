@@ -29,6 +29,7 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testing
       JWT_SECRET: testsecret
       REFRESH_SECRET: testrefresh
+      STRIPE_SECRET_KEY: sk_test_dummy
 
     steps:
       - uses: actions/checkout@v4

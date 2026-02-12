@@ -82,8 +82,6 @@ describe("DELETE /me/favorites/:productId", () => {
         const response = await request(app)
             .delete("/me/favorites/1");
 
-        console.log(response.body)
-
         expect(response.status).toBe(HttpStatus.OK);
         expect(response.body).toEqual({
             success: true,

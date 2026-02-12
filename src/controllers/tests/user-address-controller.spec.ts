@@ -74,7 +74,6 @@ describe("UserAddressController", () => {
                 street: 'Rua A',
             })
         expect(response.status).toBe(400)
-        console.log(response.body)
         expect(response.body).toEqual(
             expect.objectContaining({
                 success: false,
