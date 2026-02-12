@@ -13,9 +13,20 @@ O projeto evoluiu ao longo do tempo com a adoção de novas tecnologias e práti
 
 - **Stripe**  – Gateway de pagamento utilizado para criação e acompanhamento de transações financeiras, incluindo comunicação via webhooks.
 
-- **JWT (JSON Web Token)** – Autenticação stateless implementada para controle de acesso às rotas protegidas, assegurando escalabilidade e simplicidade no gerenciamento de sessões.
+- **JWT (JSON Web Token)** – Autenticação stateless implementada para controle de acesso às rotas protegidas, utilizando Access Token + Refresh Token para maior segurança e controle de sessão.
+
+- **Refresh Token Rotantion** - Implementação de rotação segura de refresh tokens, invalidando o token anterior a cada renovação, mitigando ataques de reutilização (token replay attack) e aumentando a proteção contra sequestro de sessão.
+
+- **Rate Limiting & Proteção contra Brute Force** - Mecanismo de limitação de requisições aplicado especialmente no endpoint de login, com bloqueio temporário após múltiplas tentativas inválidas, reduzindo riscos de ataques automatizados.
+
+- **Cookies Seguros (httpOnly + secure)** - Refresh tokens armazenados em cookies httpOnly, com flag secure habilitada em produção, protegendo contra XSS e interceptação indevida.
+
+- **Zod** - Biblioteca utilizada para validação e tipagem de schemas de entrada (DTOs), garantindo consistência de dados, tratamento estruturado de erros e maior segurança na validação de payloads da API.
+
+- **CI/CD (GitHub Actions)** - Pipeline automatizado configurado para executar build, migrations e testes a cada push ou pull request, garantindo integridade do código e prevenindo deploy de versões quebradas.
 
 - **Autenticação & Bcryptjs** – Fluxo completo de autenticação com criptografia segura de senhas, seguindo boas práticas de segurança e proteção de dados sensíveis.
+
 
 
 ## 📌 Tecnologias utilizadas
@@ -72,11 +83,16 @@ STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxx
 STRIPE_WEBHOOK_KEY=whsec_xxxxxxxxxxxxx
 FRONT_END_URL=http://localhost:3000
 
-Gerar as chaves:
+```
+
+Gerar as chaves, no terminal:
+
+```bash
 node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+```
+```env
 ACCESS_TOKEN_SECRET=
 REFRESH_TOKEN_SECRET=
-
 ```
 
 ## 🐳 Executando o banco de dados com Docker
@@ -128,7 +144,7 @@ A API é documentada utilizando Swagger, facilitando o entendimento das rotas, c
 
 ```
 
-http://localhost:4000
+http://localhost:4000/docs
 ```
 
 
@@ -141,8 +157,8 @@ http://localhost:4000
 ✔️ Documentação com Swagger
 ✔️ Refresh token
 ✔️ Rate limit
-🔄 Testes de integração (planejado)  
-🔄 Deploy em ambiente produtivo (planejado)
+✔️ Testes de integração (planejado)  
+✔️ Deploy em ambiente produtivo (planejado)
 
 
 ## 👩‍💻 Autor
