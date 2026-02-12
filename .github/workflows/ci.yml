@@ -1,4 +1,4 @@
-name: CI - API_eccommerce
+name: CI - API_ecommerce
 
 on:
   push:
