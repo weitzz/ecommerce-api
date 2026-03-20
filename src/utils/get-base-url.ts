@@ -1,6 +1,9 @@
 export const getBaseUrl = () => {
-    if (!process.env.BASE_URL) {
-        console.warn('⚠️ BASE_URL não definida, usando localhost')
+    const baseUrl = process.env.API_URL ?? process.env.BASE_URL
+
+    if (!baseUrl) {
+        console.warn("⚠️ API_URL/BASE_URL não definida, usando localhost")
     }
-    return process.env.BASE_URL ?? 'http://localhost:3333';
+
+    return baseUrl ?? `http://localhost:${process.env.PORT || "4444"}`;
 }

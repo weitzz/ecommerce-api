@@ -20,7 +20,7 @@ describe("POST /auth/logout", () => {
             .post("/auth/logout")
             .set(
                 "Cookie",
-                "refreshToken=fake-refresh-token; Path=/auth/refresh"
+                "refreshToken=fake-refresh-token; Path=/"
             )
 
         expect(response.status).toBe(204)
@@ -30,7 +30,7 @@ describe("POST /auth/logout", () => {
         const cookies = response.headers["set-cookie"]
         expect(cookies).toBeDefined()
         expect(cookies[0]).toContain("refreshToken=")
-        expect(cookies[0]).toContain("Path=/auth/refresh")
+        expect(cookies[0]).toContain("Path=/")
         expect(cookies[0]).toContain("Expires=")
     })
 

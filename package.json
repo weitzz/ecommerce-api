@@ -15,7 +15,9 @@
     "test:int": "npx dotenv-cli -e .env.test -- jest --runInBand --config ./jest.integration.config.ts",
     "posttest:int": "docker stop db_testing && docker rm db_testing",
     "db:seed": "prisma db seed",
-    "db:reset": "prisma db migrate reset"
+    "db:reset": "prisma db migrate reset",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "render:deploy": "npm run db:migrate:deploy"
   },
   "keywords": [],
   "author": "Tatiane Weitzel",

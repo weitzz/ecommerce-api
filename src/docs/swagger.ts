@@ -1,7 +1,7 @@
 import swaggerJSDoc from 'swagger-jsdoc'
+import { getBaseUrl } from '@/utils/get-base-url'
 
-const serverUrl = process.env.API_URL || 'http://localhost:4000'
-
+const serverUrl = getBaseUrl()
 
 export const swaggerConfig = swaggerJSDoc({
     definition: {
@@ -30,5 +30,5 @@ export const swaggerConfig = swaggerJSDoc({
             },
         },
     },
-    apis: ['src/routes/**/*.ts']
+    apis: ['src/routes/**/*.ts', 'dist/routes/**/*.js']
 })
