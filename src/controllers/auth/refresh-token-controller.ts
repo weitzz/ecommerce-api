@@ -2,10 +2,12 @@ import { RequestHandler } from "express"
 import { refreshTokenService } from "@/services/auth/refresh-token-service"
 import { AppError } from "@/shared/errors/app-error"
 import { HttpStatus } from "@/shared/http/status-codes"
+import { getRefreshCookieOptions } from "@/libs/cookie"
 
 export const refreshTokenController: RequestHandler = async (req, res) => {
+
     const refreshToken = req.cookies?.refreshToken
-    console.log("cookies:", req.cookies)
+
     if (!refreshToken) {
         throw new AppError(
             "Refresh token ausente",
@@ -17,16 +19,15 @@ export const refreshTokenController: RequestHandler = async (req, res) => {
     try {
         const result = await refreshTokenService(refreshToken)
 
-        res.cookie("refreshToken", result.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-            path: "/auth/refresh",
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-        })
+        res.cookie("refreshToken",
+            result.refreshToken,
+            getRefreshCookieOptions())
 
         return res.status(HttpStatus.OK).json({
-            success: true
+            success: true,
+            data: {
+                accessToken: result.accessToken
+            }
         })
 
 

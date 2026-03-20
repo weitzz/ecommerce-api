@@ -9,7 +9,9 @@ import { swaggerConfig } from './docs/swagger'
 
 const app = express();
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig))
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:3000", credentials: true
+}));
 app.use("/webhook/stripe", express.raw({ type: "application/json" }));
 app.use(express.json());
 app.use(express.static("public"));

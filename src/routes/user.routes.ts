@@ -7,7 +7,6 @@ import { authenticatedRateLimit } from "@/infra/rate-limit"
 export const router = Router();
 
 
-//limpeza automática de refresh tokens => fazer
 
 
 router.get('/', authMiddleware, authenticatedRateLimit, userController.profile)

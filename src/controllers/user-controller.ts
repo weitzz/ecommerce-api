@@ -8,6 +8,7 @@ import { HttpStatus } from "@/shared/http/status-codes";
 import { validateSchema } from "./helpers/validateSchema";
 import { getAuthenticatedUser } from "./helpers/getAuthenticatedUser";
 import { parseIdParam } from "./helpers/parsedIdParams";
+import { getRefreshCookieOptions } from "@/libs/cookie";
 
 
 
@@ -47,18 +48,18 @@ export const loginUser: RequestHandler = async (req, res) => {
             HttpStatus.UNAUTHORIZED
         )
     }
-    res.cookie("refreshToken", result.refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        path: "/auth/refresh",
-        maxAge: 1000 * 60 * 60 * 24 * 7
-    })
+
+    const { accessToken, refreshToken, user } = result
+
+    res.cookie("refreshToken",
+        refreshToken,
+        getRefreshCookieOptions())
 
     return res.status(HttpStatus.OK).json({
-        success: true, data: {
-            user: result.user,
-            accessToken: result.accessToken
+        success: true,
+        data: {
+            user,
+            accessToken
         }
     });
 }

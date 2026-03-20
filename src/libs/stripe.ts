@@ -47,7 +47,7 @@ export const createStripeCheckoutSession = async ({ cart, shippingCost, orderId 
         mode: "payment",
         metadata: { orderId: orderId.toString() },
         success_url: `${getFrontEndUrl()}/cart/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${getFrontEndUrl()}/my-orders`,
+        cancel_url: `${getFrontEndUrl()}/me`,
     })
 
 
