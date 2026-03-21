@@ -2,11 +2,11 @@
   "name": "ecommerce-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/src/server.js",
   "scripts": {
     "dev": "tsx watch --env-file=.env src/server.ts",
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
-    "start": "npm run build && node dist/server.js",
+    "start": "npm run build && node dist/src/server.js",
     "postinstall": "prisma generate",
     "railway:deploy": "prisma migrate deploy",
     "test": "jest --runInBand --detectOpenHandles --config ./jest.config.ts",
@@ -17,7 +17,7 @@
     "db:seed": "prisma db seed",
     "db:reset": "prisma db migrate reset",
     "db:migrate:deploy": "prisma migrate deploy",
-    "render:deploy": "npm run db:migrate:deploy"
+    "prebuild": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\""
   },
   "keywords": [],
   "author": "Tatiane Weitzel",

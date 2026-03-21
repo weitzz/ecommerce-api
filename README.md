@@ -148,39 +148,6 @@ A API é documentada utilizando Swagger, facilitando o entendimento das rotas, c
 http://localhost:4000/docs
 ```
 
-## Render
-
-Para subir essa API na Render como `Web Service`, use:
-
-```bash
-Build Command: npm install && npm run build
-Start Command: npm start
-Pre-Deploy Command: npm run db:migrate:deploy
-```
-
-Se o seu plano não tiver `Pre-Deploy Command`, rode `npm run db:migrate:deploy` manualmente antes de subir a nova versão.
-
-Variáveis importantes para produção:
-
-```env
-NODE_ENV=production
-PORT=10000
-API_URL=https://sua-api.onrender.com
-DATABASE_URL=postgresql://...
-FRONT_END_URL=https://seu-frontend.onrender.com
-STRIPE_SECRET_KEY=sk_live_...
-STRIPE_WEBHOOK_KEY=whsec_...
-ACCESS_TOKEN_SECRET=...
-REFRESH_TOKEN_SECRET=...
-COOKIE_DOMAIN=
-```
-
-Notas:
-
-- `FRONT_END_URL` também controla o CORS da aplicação. Se tiver mais de um frontend, informe os domínios separados por vírgula.
-- `COOKIE_DOMAIN` é opcional. Na Render, o mais seguro é deixar vazio, a menos que você realmente precise compartilhar cookie entre subdomínios.
-- A aplicação já faz bind em `0.0.0.0`, que é o necessário para a Render.
-
 ## 🚧 Status do projeto
 
 ✔️ Autenticação com JWT  
