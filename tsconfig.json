@@ -28,8 +28,7 @@
   },
   "include": [
     "src",
-    "prisma",
-    "src/generated"
+    "prisma"
   ],
   "exclude": [
     "dist",
