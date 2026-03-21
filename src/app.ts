@@ -8,20 +8,14 @@ import { swaggerConfig } from './docs/swagger'
 
 
 const app = express();
-const allowedOrigins = (process.env.FRONT_END_URL || "http://localhost:3000")
-    .split(",")
-    .map(origin => origin.trim())
-    .filter(Boolean)
+// const allowedOrigins = (process.env.FRONT_END_URL || "http://localhost:3000")
+//     .split(",")
+//     .map(origin => origin.trim())
+//     .filter(Boolean)
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig))
 app.use(cors({
-    origin(origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            return callback(null, true)
-        }
-
-        return callback(new Error("Origin não permitida pelo CORS"))
-    },
+    origin: true,
     credentials: true
 }));
 app.use("/webhook/stripe", express.raw({ type: "application/json" }));
