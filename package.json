@@ -23,7 +23,7 @@
   "author": "Tatiane Weitzel",
   "license": "ISC",
   "prisma": {
-    "seed": "node  dist/prisma/seed.js"
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "6.15.0",

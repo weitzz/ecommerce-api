@@ -8,12 +8,10 @@
       "node"
     ],
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./"
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "prisma/**/*.ts"
+    "src"
   ],
   "exclude": [
     "dist",
