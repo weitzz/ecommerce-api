@@ -12,7 +12,13 @@ const app = express();
 //     .split(",")
 //     .map(origin => origin.trim())
 //     .filter(Boolean)
-
+app.get('/', (req, res) => {
+    res.json({
+        status: "ok",
+        service: "ecommerce-api",
+        uptime: process.uptime()
+    })
+})
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig))
 app.use(cors({
     origin: true,
