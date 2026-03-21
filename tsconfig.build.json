@@ -6,7 +6,9 @@
     "incremental": false,
     "types": [
       "node"
-    ]
+    ],
+    "outDir": "./dist",
+    "rootDir": "./src"
   },
   "include": [
     "src/**/*.ts",
