@@ -1,0 +1,25 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.routes = void 0;
+const express_1 = require("express");
+const auth_routes_1 = __importDefault(require("./auth.routes"));
+const banner_routes_1 = __importDefault(require("./banner.routes"));
+const cart_routes_1 = __importDefault(require("./cart.routes"));
+const category_routes_1 = __importDefault(require("./category.routes"));
+const order_routes_1 = __importDefault(require("./order.routes"));
+const product_routes_1 = __importDefault(require("./product.routes"));
+const user_routes_1 = __importDefault(require("./user.routes"));
+const webhook_routes_1 = __importDefault(require("./webhook.routes"));
+const routes = (0, express_1.Router)();
+exports.routes = routes;
+routes.use('/auth', auth_routes_1.default);
+routes.use('/banners', banner_routes_1.default);
+routes.use('/cart', cart_routes_1.default);
+routes.use('/categories', category_routes_1.default);
+routes.use('/orders', order_routes_1.default);
+routes.use('/products', product_routes_1.default);
+routes.use('/me', user_routes_1.default);
+routes.use('/webhook', webhook_routes_1.default);
