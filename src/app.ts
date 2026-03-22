@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
         uptime: process.uptime()
     })
 })
-//app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig))
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig))
 app.use(cors({
     origin: true,
     credentials: true
