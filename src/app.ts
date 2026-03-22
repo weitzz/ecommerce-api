@@ -28,7 +28,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static("public"));
 app.use(cookieParser())
-//app.use(routes);
+app.use(routes);
 app.use(errorHandler);
 
 
