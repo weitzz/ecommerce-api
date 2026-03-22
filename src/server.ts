@@ -1,7 +1,7 @@
 import app from "./app";
 import { startRefreshTokenCleanupJob } from "./infra/refresh-token-cleanup.job";
 
-const port = Number(process.env.PORT) || 4444;
+const port = Number(process.env.PORT) || 8080;
 
 // if (process.env.NODE_ENV !== "test") {
 //     startRefreshTokenCleanupJob()
