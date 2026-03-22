@@ -1,5 +1,11 @@
-export const getBaseUrl = () => {
-    return (
-        process.env.API_URL || process.env.APP_URL || `http://localhost:${process.env.PORT || 4000}`
-    )
+export function getBaseUrl() {
+    if (process.env.APP_URL) {
+        return process.env.APP_URL
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+        return `http://localhost:${process.env.PORT || 4000}`
+    }
+
+    return ''
 }
