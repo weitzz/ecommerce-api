@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { routes } from "@/routes";
+import { routes } from "./routes";
 import { errorHandler } from "./shared/errors/error-handler";
 import cookieParser from 'cookie-parser'
 import swaggerUi from 'swagger-ui-express'
@@ -19,16 +19,16 @@ app.get('/', (req, res) => {
         uptime: process.uptime()
     })
 })
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig))
+//app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig))
 app.use(cors({
     origin: true,
     credentials: true
 }));
-app.use("/webhook/stripe", express.raw({ type: "application/json" }));
+//app.use("/webhook/stripe", express.raw({ type: "application/json" }));
 app.use(express.json());
 app.use(express.static("public"));
 app.use(cookieParser())
-app.use(routes);
+//app.use(routes);
 app.use(errorHandler);
 
 
