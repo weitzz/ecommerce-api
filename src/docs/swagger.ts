@@ -1,7 +1,8 @@
+import path from 'path'
 import swaggerJSDoc from 'swagger-jsdoc'
 import { getBaseUrl } from '@/utils/get-base-url'
 
-const serverUrl = getBaseUrl()
+const isProduction = process.env.NODE_ENV === 'production'
 
 export const swaggerConfig = swaggerJSDoc({
     definition: {
@@ -11,15 +12,7 @@ export const swaggerConfig = swaggerJSDoc({
             version: '1.0.0',
             description: 'Documentação da API',
         },
-        servers: [
-            {
-                url: serverUrl,
-                description:
-                    process.env.NODE_ENV === 'production'
-                        ? 'Servidor produção'
-                        : 'Servidor local',
-            },
-        ],
+        servers: [{ url: getBaseUrl() }],
         components: {
             securitySchemes: {
                 bearerAuth: {
@@ -30,5 +23,8 @@ export const swaggerConfig = swaggerJSDoc({
             },
         },
     },
-    apis: ['dist/routes/**/*.js']
+    apis: [path.join(
+        process.cwd(),
+        isProduction ? 'dist/routes/**/*.js' : 'src/routes/**/*.ts'
+    ),]
 })
