@@ -27,5 +27,5 @@ exports.swaggerConfig = (0, swagger_jsdoc_1.default)({
             },
         },
     },
-    apis: [path_1.default.join(process.cwd(), isProduction ? 'dist/routes/**/*.js' : 'src/routes/**/*.ts'),]
+    apis: [path_1.default.join(process.cwd(), isProduction ? 'dist/src/routes/**/*.js' : 'src/routes/**/*.ts'),]
 });

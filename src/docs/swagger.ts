@@ -25,6 +25,6 @@ export const swaggerConfig = swaggerJSDoc({
     },
     apis: [path.join(
         process.cwd(),
-        isProduction ? 'dist/routes/**/*.js' : 'src/routes/**/*.ts'
+        isProduction ? 'dist/src/routes/**/*.js' : 'src/routes/**/*.ts'
     ),]
 })
