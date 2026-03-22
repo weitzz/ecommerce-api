@@ -11,18 +11,20 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swagger_1 = require("./docs/swagger");
 const app = (0, express_1.default)();
-const allowedOrigins = (process.env.FRONT_END_URL || "http://localhost:3000")
-    .split(",")
-    .map(origin => origin.trim())
-    .filter(Boolean);
+// const allowedOrigins = (process.env.FRONT_END_URL || "http://localhost:3000")
+//     .split(",")
+//     .map(origin => origin.trim())
+//     .filter(Boolean)
+app.get('/', (req, res) => {
+    res.json({
+        status: "ok",
+        service: "ecommerce-api",
+        uptime: process.uptime()
+    });
+});
 app.use('/docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_1.swaggerConfig));
 app.use((0, cors_1.default)({
-    origin(origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            return callback(null, true);
-        }
-        return callback(new Error("Origin não permitida pelo CORS"));
-    },
+    origin: true,
     credentials: true
 }));
 app.use("/webhook/stripe", express_1.default.raw({ type: "application/json" }));

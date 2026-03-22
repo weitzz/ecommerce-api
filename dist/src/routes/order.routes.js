@@ -39,7 +39,48 @@ const orderController = __importStar(require("../controllers/order-controller"))
 const auth_1 = require("../middleware/auth");
 const rate_limit_1 = require("../infra/rate-limit");
 exports.router = (0, express_1.Router)();
+/**
+ * @openapi
+ * /orders/session:
+ *   get:
+ *     tags: [Orders]
+ *     summary: Busca pedido por sessão
+ *     responses:
+ *       200:
+ *         description: Pedido encontrado
+ */
 exports.router.get('/session', orderController.getOrderBySessionId);
+/**
+ * @openapi
+ * /orders:
+ *   get:
+ *     tags: [Orders]
+ *     summary: Lista pedidos do usuário
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de pedidos
+ */
 exports.router.get('/', auth_1.authMiddleware, rate_limit_1.authenticatedRateLimit, orderController.getOrders);
+/**
+ * @openapi
+ * /orders/{id}:
+ *   get:
+ *     tags: [Orders]
+ *     summary: Busca pedido por ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Pedido encontrado
+ *       404:
+ *         description: Pedido não encontrado
+ */
 exports.router.get('/:id', auth_1.authMiddleware, rate_limit_1.authenticatedRateLimit, orderController.getOrderById);
 exports.default = exports.router;

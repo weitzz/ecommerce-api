@@ -39,7 +39,68 @@ const cartController = __importStar(require("../controllers/cart-controller"));
 const auth_1 = require("../middleware/auth");
 const rate_limit_1 = require("../infra/rate-limit");
 exports.router = (0, express_1.Router)();
+/**
+ * @openapi
+ * /cart/mount:
+ *   post:
+ *     tags: [Cart]
+ *     summary: Monta carrinho
+ *     requestBody:
+ *       required: true
+ *     responses:
+ *       200:
+ *         description: Carrinho montado
+ */
 exports.router.post('/mount', cartController.cartMont);
+/**
+ * @openapi
+ * /cart/shipping:
+ *   get:
+ *     tags:
+ *       - Cart
+ *     summary: Calcula frete
+ *     parameters:
+ *       - in: query
+ *         name: zipcode
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "12345678"
+ *     responses:
+ *       200:
+ *         description: Valor do frete
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     zipcode:
+ *                       type: string
+ *                     shippingCost:
+ *                       type: number
+ *                     shippingDays:
+ *                       type: number
+ */
 exports.router.get('/shipping', cartController.calculateShipping);
+/**
+ * @openapi
+ * /cart/finish:
+ *   post:
+ *     tags:
+ *       - Cart
+ *     summary: Finaliza o carrinho
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Pedido finalizado
+ *       401:
+ *         description: Não autorizado
+ */
 exports.router.post('/finish', auth_1.authMiddleware, rate_limit_1.authenticatedRateLimit, cartController.finish);
 exports.default = exports.router;

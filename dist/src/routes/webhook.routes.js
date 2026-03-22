@@ -37,5 +37,18 @@ exports.router = void 0;
 const express_1 = require("express");
 const webhookController = __importStar(require("../controllers/webhook-controller"));
 exports.router = (0, express_1.Router)();
+/**
+ * @openapi
+ * /webhook/stripe:
+ *   post:
+ *     tags:
+ *       - Webhook
+ *     summary: Webhook do Stripe
+ *     requestBody:
+ *       required: true
+ *     responses:
+ *       200:
+ *         description: Evento processado
+ */
 exports.router.post('/stripe', webhookController.stripe);
 exports.default = exports.router;

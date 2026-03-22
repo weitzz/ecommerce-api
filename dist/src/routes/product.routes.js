@@ -37,7 +37,56 @@ exports.router = void 0;
 const express_1 = require("express");
 const productsController = __importStar(require("../controllers/products-controller"));
 exports.router = (0, express_1.Router)();
+/**
+ * @openapi
+ * /products:
+ *   get:
+ *     tags:
+ *       - Products
+ *     summary: Lista produtos
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: Lista de produtos
+ */
 exports.router.get('/', productsController.getProducts);
+/**
+ * @openapi
+ * /products/{id}:
+ *   get:
+ *     tags:
+ *       - Products
+ *     summary: Busca produto por ID
+ *     parameters:
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Produto encontrado
+ *       404:
+ *         description: Produto não encontrado
+ */
 exports.router.get('/:id', productsController.getProductById);
+/**
+ * @openapi
+ * /products/{id}/related:
+ *   get:
+ *     tags: [Products]
+ *     summary: Lista produtos relacionados
+ *     parameters:
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Produtos relacionados
+ */
 exports.router.get('/:id/related', productsController.getRelatedProducts);
 exports.default = exports.router;

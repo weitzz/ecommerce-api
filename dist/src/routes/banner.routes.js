@@ -37,5 +37,15 @@ exports.router = void 0;
 const express_1 = require("express");
 const bannerController = __importStar(require("../controllers/banner-controller"));
 exports.router = (0, express_1.Router)();
+/** * @openapi
+ * /banners:
+ *   get:
+ *     tags:
+ *       - Banners
+ *     summary: Lista banners
+ *     responses:
+ *       200:
+ *         description: Lista de banners
+ */
 exports.router.get('/', bannerController.getBanners);
 exports.default = exports.router;
