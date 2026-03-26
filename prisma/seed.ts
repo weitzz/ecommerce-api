@@ -16,6 +16,7 @@ async function main() {
     if (existingCategory) {
         console.log('✅ Database has already been seeded. Skipping to avoid duplicate records.')
         console.log('Found existing category:', existingCategory.name)
+        return
     }
 
     console.log('📝 No existing data found. Proceeding with seeding...')
