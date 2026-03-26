@@ -8,29 +8,27 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-
-  userAddress   UserAddress[]
-  orders        Order[]
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  password      String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now()) @updatedAt
   favorites     Favorites[]
+  orders        Order[]
   refreshTokens RefreshToken[]
+  userAddress   UserAddress[]
 }
 
 model RefreshToken {
   id        Int      @id @default(autoincrement())
-  jti       String   @unique
   tokenHash String
   userId    Int
   expiresAt DateTime
   revoked   Boolean  @default(false)
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
+  jti       String   @unique
+  user      User     @relation(fields: [userId], references: [id])
 
   @@index([userId, revoked])
 }
@@ -47,8 +45,7 @@ model UserAddress {
   complement String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model Favorites {
@@ -56,8 +53,8 @@ model Favorites {
   userId    Int
   productId Int
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }
@@ -78,13 +75,13 @@ model Product {
   categoryId  Int
   viewsCount  Int               @default(0)
   salesCount  Int               @default(0)
-  images      ProductImage[]
-  metadata    ProductMetadata[]
-  category    Category?         @relation(fields: [categoryId], references: [id])
-  orders      OrderProduct[]
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @default(now()) @updatedAt
   favorites   Favorites[]
+  orders      OrderProduct[]
+  category    Category          @relation(fields: [categoryId], references: [id])
+  images      ProductImage[]
+  metadata    ProductMetadata[]
 }
 
 model ProductImage {
@@ -93,8 +90,7 @@ model ProductImage {
   imageUrl  String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-
-  product Product @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
 model ProductMetadata {
@@ -104,8 +100,7 @@ model ProductMetadata {
   metadataValueId    String
   createdAt          DateTime @default(now())
   updatedAt          DateTime @default(now()) @updatedAt
-
-  product Product @relation(fields: [productId], references: [id])
+  product            Product  @relation(fields: [productId], references: [id])
 }
 
 model Category {
@@ -114,19 +109,18 @@ model Category {
   name             String
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @default(now()) @updatedAt
-  products         Product[]
   categoryMetadata CategoryMetadata[]
+  products         Product[]
 }
 
 model CategoryMetadata {
-  id         String   @id
+  id         String          @id
   name       String
   categoryId Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now()) @updatedAt
-
-  category Category        @relation(fields: [categoryId], references: [id])
-  values   MetadataValue[]
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @default(now()) @updatedAt
+  category   Category        @relation(fields: [categoryId], references: [id])
+  values     MetadataValue[]
 }
 
 model MetadataValue {
@@ -154,8 +148,8 @@ model Order {
   shippingComplement String?
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @default(now()) @updatedAt
-  orderProducts      OrderProduct[]
   user               User           @relation(fields: [userId], references: [id])
+  orderProducts      OrderProduct[]
 }
 
 model OrderProduct {
@@ -166,7 +160,6 @@ model OrderProduct {
   price     Float
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-
-  order   Order   @relation(fields: [orderId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 }
