@@ -10,6 +10,7 @@ const get_stripe_secret_key_1 = require("../utils/get-stripe-secret-key");
 const get_front_end_url_1 = require("../utils/get-front-end-url");
 exports.stripe = new stripe_1.default((0, get_stripe_secret_key_1.getStripeSecretKey)());
 const createStripeCheckoutSession = async ({ cart, shippingCost, orderId }) => {
+    const frontEndUrl = (0, get_front_end_url_1.getFrontEndUrl)();
     let stripeLineItems = [];
     for (let item of cart) {
         const product = await (0, products_service_1.getProductByIdService)(item.productId);
@@ -42,8 +43,8 @@ const createStripeCheckoutSession = async ({ cart, shippingCost, orderId }) => {
         line_items: stripeLineItems,
         mode: "payment",
         metadata: { orderId: orderId.toString() },
-        success_url: `${(0, get_front_end_url_1.getFrontEndUrl)()}/cart/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${(0, get_front_end_url_1.getFrontEndUrl)()}/me`,
+        success_url: `${frontEndUrl}/cart/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${frontEndUrl}/me`,
     });
     return session;
 };

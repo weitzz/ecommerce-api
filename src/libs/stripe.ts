@@ -11,6 +11,7 @@ export const stripe = new Stripe(getStripeSecretKey())
 
 
 export const createStripeCheckoutSession = async ({ cart, shippingCost, orderId }: CreatePaymentParams) => {
+    const frontEndUrl = getFrontEndUrl();
     let stripeLineItems = [];
     for (let item of cart) {
         const product = await getProductByIdService(item.productId);
@@ -46,8 +47,8 @@ export const createStripeCheckoutSession = async ({ cart, shippingCost, orderId 
         line_items: stripeLineItems,
         mode: "payment",
         metadata: { orderId: orderId.toString() },
-        success_url: `${getFrontEndUrl()}/cart/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${getFrontEndUrl()}/me`,
+        success_url: `${frontEndUrl}/cart/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${frontEndUrl}/me`,
     })
 
 

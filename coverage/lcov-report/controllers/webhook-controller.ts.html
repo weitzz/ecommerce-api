@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">27.77% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>5/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">23.52% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>17/17</span>
+                <span class='fraction'>4/17</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -94,68 +94,68 @@
 <a name='L29'></a><a href='#L29'>29</a>
 <a name='L30'></a><a href='#L30'>30</a>
 <a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">13x</span>
-<span class="cline-any cline-yes">13x</span>
-<span class="cline-any cline-yes">13x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getConstructEvent } from "@/libs/stripe";
 import { updateOrderStatusService } from "@/services/order-service";
 import { getStripeWebhookSecret } from "@/utils/get-stripe-webhook-secret";
 import { RequestHandler } from "express";
 import Stripe from "stripe";
 &nbsp;
-export const stripe: RequestHandler = async (req, res) =&gt; {
-    const signature = req.headers['stripe-signature'] as string
-    const webhookKey = getStripeWebhookSecret()
-    const rawBody = req.body
-    const event = await getConstructEvent(rawBody, signature, webhookKey)
-    if (event) {
-        const session = event.data.object as Stripe.Checkout.Session
-        const orderId = Number(session.metadata?.orderId)
+export const stripe: RequestHandler = <span class="fstat-no" title="function not covered" >async </span>(req, res) =&gt; {
+    const signature = <span class="cstat-no" title="statement not covered" >req.headers['stripe-signature'] as string</span>
+    const webhookKey = <span class="cstat-no" title="statement not covered" >getStripeWebhookSecret()</span>
+    const rawBody = <span class="cstat-no" title="statement not covered" >req.body</span>
+    const event = <span class="cstat-no" title="statement not covered" >await getConstructEvent(rawBody, signature, webhookKey)</span>
+<span class="cstat-no" title="statement not covered" >    if (event) {</span>
+        const session = <span class="cstat-no" title="statement not covered" >event.data.object as Stripe.Checkout.Session</span>
+        const orderId = <span class="cstat-no" title="statement not covered" >Number(session.metadata?.orderId)</span>
 &nbsp;
 &nbsp;
-        switch (event.type) {
+<span class="cstat-no" title="statement not covered" >        switch (event.type) {</span>
             case 'checkout.session.completed':
             case 'checkout.session.async_payment_succeeded':
 &nbsp;
-                await updateOrderStatusService(orderId, 'paid')
-                break;
+<span class="cstat-no" title="statement not covered" >                await updateOrderStatusService(orderId, 'paid')</span>
+<span class="cstat-no" title="statement not covered" >                break;</span>
             case 'checkout.session.expired':
             case 'checkout.session.async_payment_failed':
-                await updateOrderStatusService(orderId, 'canceled')
-                break;
+<span class="cstat-no" title="statement not covered" >                await updateOrderStatusService(orderId, 'canceled')</span>
+<span class="cstat-no" title="statement not covered" >                break;</span>
 &nbsp;
         }
     }
 &nbsp;
-    res.json({ received: true });
+<span class="cstat-no" title="statement not covered" >    res.json({ received: true });</span>
 }</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -163,7 +163,7 @@ export const stripe: RequestHandler = async (req, res) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-20T20:01:34.240Z
+                at 2026-04-09T23:38:28.181Z
             </div>
         <script src="../prettify.js"></script>
         <script>

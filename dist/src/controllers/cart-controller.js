@@ -81,7 +81,12 @@ const finish = async (req, res) => {
     }
     return res.status(status_codes_1.HttpStatus.CREATED).json({
         success: true,
-        data: { url }
+        url,
+        checkoutUrl: url,
+        data: {
+            url,
+            checkoutUrl: url
+        }
     });
 };
 exports.finish = finish;

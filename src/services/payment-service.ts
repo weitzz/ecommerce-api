@@ -10,6 +10,7 @@ export const createPaymentLinkService = async ({ cart, shippingCost, orderId }: 
         if (!session) return null;
         return session.url;
     } catch (error) {
+        console.error("Stripe create session error:", error);
         return null;
     }
 

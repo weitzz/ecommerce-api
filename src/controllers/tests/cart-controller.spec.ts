@@ -145,7 +145,10 @@ describe("POST /cart/finish", () => {
             });
         expect(res.status).toBe(201);
         expect(res.body.success).toBe(true);
+        expect(res.body.url).toBe("https://pay.test");
+        expect(res.body.checkoutUrl).toBe("https://pay.test");
         expect(res.body.data.url).toBe("https://pay.test");
+        expect(res.body.data.checkoutUrl).toBe("https://pay.test");
     });
 
     it("deve retornar erro se endereço não existir", async () => {

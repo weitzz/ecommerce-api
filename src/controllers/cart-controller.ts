@@ -131,6 +131,11 @@ export const finish: RequestHandler = async (req, res) => {
 
     return res.status(HttpStatus.CREATED).json({
         success: true,
-        data: { url }
+        url,
+        checkoutUrl: url,
+        data: {
+            url,
+            checkoutUrl: url
+        }
     });
 }
