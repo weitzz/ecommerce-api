@@ -48,6 +48,6 @@ export const authenticatedRateLimit = createRateLimiter(
             return `user:${req.user.id}`
         }
 
-        return ipKeyGenerator(req.ip)
+        return ipKeyGenerator(req.ip || req.socket.remoteAddress || "")
     }
 )
