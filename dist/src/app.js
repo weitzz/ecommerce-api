@@ -11,10 +11,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swagger_1 = require("./docs/swagger");
 const app = (0, express_1.default)();
-// const allowedOrigins = (process.env.FRONT_END_URL || "http://localhost:3000")
-//     .split(",")
-//     .map(origin => origin.trim())
-//     .filter(Boolean)
+app.set('trust proxy', 1);
 app.get('/', (req, res) => {
     res.json({
         status: "ok",

@@ -60,5 +60,5 @@ exports.authenticatedRateLimit = (0, exports.createRateLimiter)(100, 15 * 60 * 1
     if (req.user?.id) {
         return `user:${req.user.id}`;
     }
-    return (0, express_rate_limit_1.ipKeyGenerator)(req.ip);
+    return (0, express_rate_limit_1.ipKeyGenerator)(req.ip || req.socket.remoteAddress || "");
 });
