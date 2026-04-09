@@ -8,10 +8,7 @@ import { swaggerConfig } from './docs/swagger'
 
 
 const app = express();
-// const allowedOrigins = (process.env.FRONT_END_URL || "http://localhost:3000")
-//     .split(",")
-//     .map(origin => origin.trim())
-//     .filter(Boolean)
+app.set('trust proxy', 1)
 app.get('/', (req, res) => {
     res.json({
         status: "ok",
